@@ -4,11 +4,10 @@ export const scale = 2
 
 export const K = kaplay( 
     {
-        width: 640 * 2, 
-        height: 360 * 2, 
+        width: 640 * scale, 
+        height: 360 * scale, 
         letterbox: true, 
         scale,
-        background: [0, 0, 0],
         global: false,
         touchToMouse: true,
         debugKey: 'd',
