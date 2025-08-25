@@ -1,7 +1,6 @@
 import { K } from '../kaplayctx'
 
 const loadSprites = () => {
-	console.log('loadSprite')
 	K.loadSprite(
 		'player',
 		'sprites/u.png',
@@ -105,7 +104,6 @@ const loadSprites = () => {
 const loadFont = () => K.loadFont('glyphmesss', 'glyphmesss.ttf')
 
 const loadSounds = () => {
-	console.log('loadSound')
 	K.loadSound('notify', 'sounds/notify.mp3');
 	K.loadSound('boom', 'sounds/boom.wav');
 	K.loadSound('health', 'sounds/health.wav');
@@ -113,7 +111,6 @@ const loadSounds = () => {
 }
 
 export const loadEverything = () => {
-	console.log('loadEverything')
 	loadFont()
 	loadSprites()
 	loadSounds()
