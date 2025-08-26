@@ -1,10 +1,10 @@
 
 export const curry = ( fn: Function ) => {
-	const curry = ( ...args: any[] ) => {
+	const curried = ( ...args: any[] ) => {
 		if ( args.length >= fn.length ) return fn.apply(this, args)
-		return ( ...args2: any[] ) => curry.apply(this, args.concat(args2))
+		return ( ...args2: any[] ) => curried.apply(this, args.concat(args2))
 	}
-	return curry
+	return curried
 }
 
 export const piper = ( ...fns: Function[] ) => (args: any) => fns.reduce( (g, f) => f(g), args )
