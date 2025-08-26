@@ -1,5 +1,5 @@
-import type { KAPLAYCtx } from "kaplay"
-import { setMapCollider, setBackgroundColor, setGravity, setCamera } from "../utils/background"
+import type { GameObj, KAPLAYCtx } from "kaplay"
+import { setMapCollider, setBackgroundColor, setGravity, setCamera, type Layer } from "../utils/background"
 import { makePlayer } from "../entities/player"
 
 export const room1 = ( k: KAPLAYCtx, roomData: any ) => {
@@ -7,7 +7,17 @@ export const room1 = ( k: KAPLAYCtx, roomData: any ) => {
 
 	setGravity(k, 1000)
 	setCamera(k, 4, {x: 170, y: 100})
-	setMapCollider(k, 'room1', roomData.layers)
+	const [ map, positions ] = setMapCollider(k, 'room1', roomData.layers)
+	const player = (map as GameObj).add( makePlayer(k) )
+	setPlayer(positions as Layer[], player)
+}
 
-	const player = makePlayer(k.vec2(100, 100))
+const setPlayer = ( positions: Layer[], player: GameObj ) => {
+	setPlayerPosition(positions, player)
+	player.setControls()
+}
+
+const setPlayerPosition = ( positions: Layer[], player: GameObj ) => {
+	positions.filter( position => position.name === 'player' )
+	.forEach( position => player.setPosition({x: position.x, y: position.y}) )
 }

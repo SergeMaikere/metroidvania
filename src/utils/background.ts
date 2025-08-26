@@ -1,17 +1,19 @@
 import { type GameObj, type KAPLAYCtx } from "kaplay"
 import { curry, piper } from "./helper"
 
-type Point = { x: number, y: number }
+export type Point = { x: number, y: number }
 
-interface Layer {
+export interface Layer {
 	name: string,
 	id: number,
 	type: string,
 	visibility: boolean
-	data: number[],
+	data?: number[],
 	width: number,
 	height: number,
-	opacity: number,
+	opacity?: number,
+	rotation?: number,
+	objects?: any[],
 	x: number,
 	y: number,
 	polygon?: Point[]
@@ -35,22 +37,22 @@ export const setCamera = ( k: KAPLAYCtx, scale: number, pos: Point ) => {
 }
 
 export const setMapCollider = ( k: KAPLAYCtx, room: string, layers: Layer[] ) => {
-	let [ map, colliders ] = [ getMap(k, room), getColliders(layers) ]
-
-	for ( const collider of colliders ) {
-		piper(
-			curry(setColliderWithPolygons)(k, map),
-			curry(setBasicCollider)(k, map),
-			curry(setBossBarrierCollider)(k, map)
-		)(collider)
-	}
+	let [ map, colliders, positions ] = [ getMap(k, room), getLayer(layers, 'colliders'), getLayer(layers, 'positions') ]
+	colliders.forEach(
+		(collider) => {
+			piper(
+				curry(setColliderWithPolygons)(k, map),
+				curry(setBasicCollider)(k, map),
+				curry(setBossBarrierCollider)(k, map)
+			)(collider)
+		}
+	)
+	return [ map as GameObj, positions as Layer [] ]
 }
 
-const getMap = ( k: KAPLAYCtx, room: string ) => k.add( [k.sprite(room), k.pos(0, 0)] )
+const getMap = ( k: KAPLAYCtx, room: string ): GameObj => k.add( [k.sprite(room), k.pos(0, 0)] )
 
-const getColliders = ( layers: Layer[] ) => layers
-	.filter( (layer: any) => layer.name === 'colliders' )
-	.reduce( (acc: any[], curr: any) => [...acc, curr], [] )
+const getLayer = ( layers: any[], name: string ): Layer[] => layers.filter( layer => layer.name === name )[0].objects
 
 const setCoordinates = ( k: KAPLAYCtx, polygons: Point[] ) => polygons.map( (point: Point) => k.vec2(point.x, point.y) )
 
