@@ -1,8 +1,7 @@
-import type { GameObj, KAPLAYCtx } from "kaplay";
+import type { Collision, GameObj, KAPLAYCtx } from "kaplay";
 import { state } from "../state/sateManager";
-import type { Point } from "../utils/background";
+import type { Layer, Point } from "../utils/background";
 import { curry } from "../utils/helper";
-import { K } from "../kaplayctx";
 
 type Direction = 'left' | 'right'
 
@@ -22,11 +21,24 @@ export const makePlayer = ( k: KAPLAYCtx ) => {
 				speed: 150,
 				isAttacking: false,
 				controlHandlers: [],
-				setPosition ( pos: Point ) { positionHandler(pos, this) },
-				setControls () { return setControlHandlers(k, this) }
+				setPosition ( pos: Point ) { return positionHandler(pos, this) },
+				setControls () { return controlsHandler(k, this) },
+				setEvents () { return eventHandler(this) },
+				enablePasstrough () { return passthrough(this) }
 			}
 		]
 	)
+}
+
+export const setPlayer = ( positions: Layer[], player: GameObj ) => {
+	setPlayerPosition(positions, player)
+	player.setControls()
+	player.setEvents()
+}
+
+const setPlayerPosition = ( positions: Layer[], player: GameObj ) => {
+	positions.filter( position => position.name === 'player' )
+	.forEach( position => player.setPosition({x: position.x, y: position.y}) )
 }
 
 const positionHandler = ( p: Point, player: any ) => {
@@ -34,9 +46,26 @@ const positionHandler = ( p: Point, player: any ) => {
 	player.pos.y = p.y
 }
 
-const setControlHandlers = ( k: KAPLAYCtx, player: any  ) => {
+const controlsHandler = ( k: KAPLAYCtx, player: any  ) => {
 	const events = [ onKeyPress, onKeyDown, onKeyRelease ]
 	player.controlHandlers = events.map( event => event(k, player) )
+}
+
+const eventHandler = ( player: any ) => {
+	player.onFall( () => player.play('fall') )
+	player.onFallOff( () => player.play('fall') )
+	player.onGround( () => player.play('idle') )
+	player.onHeadbutt( () => player.play('fall') )
+}
+
+const passthrough = ( player: GameObj ) => {
+	player.onBeforePhysicsResolve(
+		(collision: Collision) => {
+			if ( collision.target.is('passthrough') && player.isJumping() ) {
+				collision.preventResolution()
+			}
+		}
+	)
 }
 
 const onKeyPress = ( k: KAPLAYCtx, player: GameObj ) => {

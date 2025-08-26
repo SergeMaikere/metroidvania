@@ -15,6 +15,8 @@ export const room1 = ( k: KAPLAYCtx, roomData: any ) => {
 const setPlayer = ( positions: Layer[], player: GameObj ) => {
 	setPlayerPosition(positions, player)
 	player.setControls()
+	player.setEvents()
+	player.enablePasstrough()
 }
 
 const setPlayerPosition = ( positions: Layer[], player: GameObj ) => {
