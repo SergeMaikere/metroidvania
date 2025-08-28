@@ -13,6 +13,7 @@ export interface Layer {
 	height: number,
 	opacity?: number,
 	rotation?: number,
+	properties?: any[],
 	objects?: any[],
 	x: number,
 	y: number,
@@ -36,8 +37,7 @@ export const setCamera = ( k: KAPLAYCtx, scale: number, pos: Point ) => {
 	k.setCamPos(pos.x, pos.y)
 }
 
-export const setMapCollider = ( k: KAPLAYCtx, room: string, layers: Layer[] ) => {
-	let [ map, colliders, positions ] = [ getMap(k, room), getLayer(layers, 'colliders'), getLayer(layers, 'positions') ]
+export const setMapCollider = ( k: KAPLAYCtx, map: GameObj, colliders: Layer[] ) => {
 	colliders.forEach(
 		(collider) => {
 			piper(
@@ -47,12 +47,11 @@ export const setMapCollider = ( k: KAPLAYCtx, room: string, layers: Layer[] ) =>
 			)(collider)
 		}
 	)
-	return [ map as GameObj, positions as Layer [] ]
 }
 
-const getMap = ( k: KAPLAYCtx, room: string ): GameObj => k.add( [k.sprite(room), k.pos(0, 0)] )
+export const getMap = ( k: KAPLAYCtx, room: string ): GameObj => k.add( [k.sprite(room), k.pos(0, 0)] )
 
-const getLayer = ( layers: any[], name: string ): Layer[] => layers.filter( layer => layer.name === name )[0].objects
+export const getLayer = ( layers: any[], name: string ): Layer[] => layers.find( layer => layer.name === name ).objects
 
 const setCoordinates = ( k: KAPLAYCtx, polygons: Point[] ) => polygons.map( (point: Point) => k.vec2(point.x, point.y) )
 

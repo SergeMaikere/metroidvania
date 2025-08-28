@@ -1,25 +1,24 @@
-import type { GameObj, KAPLAYCtx } from "kaplay"
-import { setMapCollider, setBackgroundColor, setGravity, setCamera, type Layer } from "../utils/background"
-import { makePlayer } from "../entities/player"
+import type { KAPLAYCtx } from "kaplay"
+import { setMapCollider, setBackgroundColor, setGravity, setCamera, getLayer, getMap } from "../utils/background"
+import { makePlayer, setPlayer, setPlayerPosition } from "../entities/player"
+import { setCameraControls, setCameraZones } from "../utils/cameras"
 
 export const room1 = ( k: KAPLAYCtx, roomData: any ) => {
 	setBackgroundColor(k, '#a2aed5')
-
 	setGravity(k, 1000)
 	setCamera(k, 4, {x: 170, y: 100})
-	const [ map, positions ] = setMapCollider(k, 'room1', roomData.layers)
-	const player = (map as GameObj).add( makePlayer(k) )
-	setPlayer(positions as Layer[], player)
-}
 
-const setPlayer = ( positions: Layer[], player: GameObj ) => {
+	const map = getMap(k, 'room1')
+	const colliders = getLayer(roomData.layers, 'colliders')
+	setMapCollider(k, map, colliders)
+
+	const player = map.add( makePlayer(k) )
+	const positions = getLayer(roomData.layers, 'positions')
 	setPlayerPosition(positions, player)
-	player.setControls()
-	player.setEvents()
-	player.enablePasstrough()
-}
 
-const setPlayerPosition = ( positions: Layer[], player: GameObj ) => {
-	positions.filter( position => position.name === 'player' )
-	.forEach( position => player.setPosition({x: position.x, y: position.y}) )
+	const cameras = getLayer(roomData.layers, 'cameras')
+	setCameraZones(k, map, cameras)
+	setCameraControls(k, map, roomData, player)
+
+	setPlayer(player)
 }

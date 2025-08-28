@@ -24,19 +24,19 @@ export const makePlayer = ( k: KAPLAYCtx ) => {
 				setPosition ( pos: Point ) { return positionHandler(pos, this) },
 				setControls () { return controlsHandler(k, this) },
 				setEvents () { return eventHandler(this) },
-				enablePasstrough () { return passthrough(this) }
+				enablePassthrough () { return passthrough(this) }
 			}
 		]
 	)
 }
 
-export const setPlayer = ( positions: Layer[], player: GameObj ) => {
-	setPlayerPosition(positions, player)
+export const setPlayer = ( player: GameObj ) => {
 	player.setControls()
 	player.setEvents()
+	player.enablePassthrough()
 }
 
-const setPlayerPosition = ( positions: Layer[], player: GameObj ) => {
+export const setPlayerPosition = ( positions: Layer[], player: GameObj ) => {
 	positions.filter( position => position.name === 'player' )
 	.forEach( position => player.setPosition({x: position.x, y: position.y}) )
 }
@@ -58,7 +58,7 @@ const eventHandler = ( player: any ) => {
 	player.onHeadbutt( () => player.play('fall') )
 }
 
-const passthrough = ( player: GameObj ) => {
+const passthrough = ( player: any ) => {
 	player.onBeforePhysicsResolve(
 		(collision: Collision) => {
 			if ( collision.target.is('passthrough') && player.isJumping() ) {
