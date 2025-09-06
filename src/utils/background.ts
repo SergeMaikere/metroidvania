@@ -68,6 +68,7 @@ const setColliderWithPolygons = ( k: KAPLAYCtx, map: GameObj, collider: Layer ) 
 					collisionIgnore: ['collider']
 				} 
 			),
+			k.body({isStatic: true}),
 			collider.type,
 			'collider'
 		]

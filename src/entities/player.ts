@@ -36,9 +36,10 @@ export const setPlayer = ( player: GameObj ) => {
 	player.enablePassthrough()
 }
 
-export const setPlayerPosition = ( positions: Layer[], player: GameObj ) => {
+export const setPlayerPosition = ( player: GameObj, positions: Layer[] ) => {
 	positions.filter( position => position.name === 'player' )
 	.forEach( position => player.setPosition({x: position.x, y: position.y}) )
+	return positions
 }
 
 const positionHandler = ( p: Point, player: any ) => {
