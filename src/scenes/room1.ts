@@ -7,7 +7,7 @@ import { setDrones } from "../entities/enemyDrone"
 export const room1 = ( k: KAPLAYCtx, roomData: any ) => {
 
 	setBackgroundColor(k, '#a2aed5')
-	setGravity(k, 2000)
+	setGravity(k, 2500)
 	setCamera(k, 4, {x: 170, y: 100})
 
 	const map = getMap(k, 'room1')

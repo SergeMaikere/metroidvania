@@ -1,4 +1,4 @@
-import type { Collision, GameObj, KAPLAYCtx } from "kaplay";
+import type { Collision, GameObj, KAPLAYCtx, KEventController } from "kaplay";
 import { state } from "../state/sateManager";
 import type { Layer, Point } from "../utils/background";
 import { curry } from "../utils/helper";
@@ -22,9 +22,10 @@ export const makePlayer = ( k: KAPLAYCtx ) => {
 				isAttacking: false,
 				controlHandlers: [],
 				setPosition ( pos: Point ) { return positionHandler(pos, this) },
-				setControls () { return controlsHandler(k, this) },
+				setControls () { return setControls(k, this) },
+				disableControls () { return disableControls(this) },
 				setEvents () { return eventHandler(this) },
-				enablePassthrough () { return passthrough(this) }
+				enablePassthrough () { return passthrough(this) },
 			}
 		]
 	)
@@ -47,10 +48,12 @@ const positionHandler = ( p: Point, player: any ) => {
 	player.pos.y = p.y
 }
 
-const controlsHandler = ( k: KAPLAYCtx, player: any  ) => {
+const setControls = ( k: KAPLAYCtx, player: any  ) => {
 	const events = [ onKeyPress, onKeyDown, onKeyRelease ]
 	player.controlHandlers = events.map( event => event(k, player) )
 }
+
+const disableControls = ( player: any ) => player.controlHandlers.forEach( (handler: KEventController) => handler.cancel() )
 
 const eventHandler = ( player: any ) => {
 	player.onFall( () => player.play('fall') )

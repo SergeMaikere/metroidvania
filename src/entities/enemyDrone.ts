@@ -131,7 +131,7 @@ const onExplode = ( k: KAPLAYCtx, drone: GameObj ) => {
 
 const handleDroneExplosion = ( k: KAPLAYCtx, drone: GameObj ) => {
 	k.play('boom')
-	// drone.collisionIgnore = [ 'player' ]
+	drone.collisionIgnore = [ 'player' ]
 	drone.unuse('body')
 	drone.play('explode')
 }
@@ -160,8 +160,7 @@ export const setDrones = ( k: KAPLAYCtx, map: GameObj, positions: Layer[] ) => {
 	
 	for ( const position of positions ) {
 		if ( position.type === 'drone' ) {
-			const drone = makeEnemyDrone(k, k.vec2(position.x, position.y))
-			map.add(drone)
+			const drone = map.add( makeEnemyDrone(k, k.vec2(position.x, position.y)) )
 			drone.setBehavior()
 			drone.setEvents()
 		}

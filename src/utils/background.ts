@@ -1,5 +1,6 @@
 import { type GameObj, type KAPLAYCtx } from "kaplay"
 import { curry, piper } from "./helper"
+import { makeBossBarrier } from "./bossBarrier"
 
 export type Point = { x: number, y: number }
 
@@ -96,13 +97,6 @@ const setBasicCollider = ( k: KAPLAYCtx, map: GameObj, collider: Layer ) => {
 
 const setBossBarrierCollider = ( k: KAPLAYCtx, map: GameObj, collider: Layer ) => {
 	if ( collider.name !== 'boss-barrier' ) return collider
-
-	// return map.add(
-	// 	[
-	// 		k.pos( collider.x, collider.y ),
-	// 		k.area( {shape: new k.Rect(k.vec2(0), collider.width, collider.height)} ),
-	// 		k.body( {isStatic: true} )
-	// 	]
-	// )
-	return collider
+	const bossBarrier =  map.add( makeBossBarrier(k, collider) )
+	bossBarrier.setEvents()
 }

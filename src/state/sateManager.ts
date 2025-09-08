@@ -1,5 +1,5 @@
 
-class State {
+export class State {
 
 	static instance: State
 
