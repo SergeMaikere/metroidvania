@@ -1,28 +1,23 @@
 
-class State {
+export class State {
 
 	static instance: State
 
-	private _playerHp: number
-	private static _maxPlayerHp: number = 3
+	private _maxPlayerHp: number = 3
+	private _playerHp: number = this._maxPlayerHp
 
-	private _isDoubleJump: boolean
-	private _isBossDefeated: boolean
-	private _isBossFight: boolean
+	private _isDoubleJump: boolean = false
+	private _isBossDefeated: boolean = false
+	private _isBossFight: boolean = false
 
 	constructor () {
 		if ( State.instance ) return State.instance
 		State.instance = this
 
-		this._playerHp = 3
-		this._isDoubleJump = false
-		this._isBossDefeated = false
-		this._isBossFight = false
-	
 	}
 
 	set playerHp ( value: number ) {
-		if ( value > State._maxPlayerHp || value < 0 ) return
+		if ( value > this._maxPlayerHp || value < 0 ) return
 		this._playerHp = value
 	}
 
