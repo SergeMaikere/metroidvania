@@ -76,8 +76,8 @@ const onHurt = async ( k: KAPLAYCtx, state: State, player: GameObj ) => {
 
 const playerDies = ( k: KAPLAYCtx, state: State, player: GameObj ) => {
 	k.play('boom')
-	player.play('explode')
 	state.playerHp = state.maxPlayerHp
+	player.play('explode')
 }
 
 const passthrough = ( player: any ) => {

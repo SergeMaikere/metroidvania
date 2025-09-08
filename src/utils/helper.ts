@@ -19,6 +19,8 @@ export const fetchThis = async ( url: string ) => {
 	return await result.json() 
 }
 
+export const isPlayerInRange = ( player: GameObj, enemy: GameObj ) => enemy.pos.dist(player.pos) < enemy.range
+
 export const kGet = ( gameObj: string, recursive: boolean = true ) => K.get(gameObj, {recursive})[0]
 
 export const isAnim = ( gameObj: GameObj, anim: string ) => gameObj.curAnim() === anim
