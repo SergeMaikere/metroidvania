@@ -1,4 +1,5 @@
 import type { GameObj, KAPLAYCtx } from "kaplay"
+import { K } from "../kaplayctx"
 
 export const curry = ( fn: Function ) => {
 	const curried = ( ...args: any[] ) => {
@@ -18,6 +19,21 @@ export const fetchThis = async ( url: string ) => {
 	return await result.json() 
 }
 
-export const kGet = ( k: KAPLAYCtx ) => ( gameObj: string, recursive: boolean = true ) => k.get(gameObj, {recursive})[0]
+export const kGet = ( gameObj: string, recursive: boolean = true ) => K.get(gameObj, {recursive})[0]
 
 export const isAnim = ( gameObj: GameObj, anim: string ) => gameObj.curAnim() === anim
+
+export const blink = async ( k: KAPLAYCtx, gameObj: GameObj, span: number = 0.1 ) => {
+	await setOpacity(k, gameObj, 0, span)
+	setOpacity(k, gameObj, 1, span)
+}
+
+export const setOpacity = async ( k: KAPLAYCtx, gameObj: GameObj, opacity: number, span: number ) => {
+	await k.tween(
+		gameObj.opacity,
+		opacity,
+		span,
+		(val: number) => gameObj.opacity = val,
+		k.easings.linear
+	)
+}

@@ -12,7 +12,7 @@ const loadSprites = () => {
 				run: {from: 8, to: 13, loop: true},
 				jump: 51,
 				fall: 54,
-				explode: {from: 64, to: 69, loop: true},
+				explode: {from: 64, to: 69},
 				attack: {from: 24, to: 28, speed: 16}
 			}
 		}

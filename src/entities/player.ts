@@ -1,7 +1,7 @@
 import type { Collision, GameObj, KAPLAYCtx, KEventController } from "kaplay";
-import { state } from "../state/sateManager";
+import { State, state } from "../state/sateManager";
 import type { Layer, Point } from "../utils/background";
-import { curry } from "../utils/helper";
+import { blink, curry, kGet } from "../utils/helper";
 
 type Direction = 'left' | 'right'
 
@@ -24,7 +24,7 @@ export const makePlayer = ( k: KAPLAYCtx ) => {
 				setPosition ( pos: Point ) { return positionHandler(pos, this) },
 				setControls () { return setControls(k, this) },
 				disableControls () { return disableControls(this) },
-				setEvents () { return eventHandler(this) },
+				setEvents () { return eventHandler(k, state, this) },
 				enablePassthrough () { return passthrough(this) },
 			}
 		]
@@ -55,11 +55,29 @@ const setControls = ( k: KAPLAYCtx, player: any  ) => {
 
 const disableControls = ( player: any ) => player.controlHandlers.forEach( (handler: KEventController) => handler.cancel() )
 
-const eventHandler = ( player: any ) => {
+const eventHandler = ( k: KAPLAYCtx, state: State, player: any ) => {
 	player.onFall( () => player.play('fall') )
 	player.onFallOff( () => player.play('fall') )
 	player.onGround( () => player.play('idle') )
 	player.onHeadbutt( () => player.play('fall') )
+	player.on( 'heal', () => onHeal(state, player) )
+	player.on( 'hurt', () => onHurt(k, state, player) )
+	player.onAnimEnd( (anim: string) => anim === 'explode' && k.go('intro') )
+}
+
+const onHeal = ( state: State, player: GameObj ) => {
+	state.playerHp = player.hp()
+}
+
+const onHurt = async ( k: KAPLAYCtx, state: State, player: GameObj ) => {
+	await blink(k, player)
+	player.hp() > 0 ? state.playerHp = player.hp() : playerDies(k, state, player)
+}
+
+const playerDies = ( k: KAPLAYCtx, state: State, player: GameObj ) => {
+	k.play('boom')
+	player.play('explode')
+	state.playerHp = state.maxPlayerHp
 }
 
 const passthrough = ( player: any ) => {
@@ -129,7 +147,7 @@ const returnToPeace = ( k: KAPLAYCtx, player: GameObj, anim: string ) => {
 }
 
 const destroySwordHitbox = ( k: KAPLAYCtx ) => {
-	const swordHitbox = k.get( 'sword-hitbox', {recursive: true} )[0]
+	const swordHitbox = kGet('sword-hitbox')
 	return swordHitbox && k.destroy(swordHitbox)
 }
 

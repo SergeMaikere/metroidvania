@@ -3,8 +3,8 @@ export class State {
 
 	static instance: State
 
-	private _maxPlayerHp: number = 3
-	private _playerHp: number = this._maxPlayerHp
+	readonly maxPlayerHp: number = 3
+	private _playerHp: number = this.maxPlayerHp
 
 	private _isDoubleJump: boolean = false
 	private _isBossDefeated: boolean = false
@@ -17,7 +17,7 @@ export class State {
 	}
 
 	set playerHp ( value: number ) {
-		if ( value > this._maxPlayerHp || value < 0 ) return
+		if ( value > this.maxPlayerHp || value < 0 ) return
 		this._playerHp = value
 	}
 
