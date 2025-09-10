@@ -101,8 +101,8 @@ const onHitByPlayer = ( k: KAPLAYCtx, boss: GameObj ) => {
 }
 
 const stateFlowCloser = ( k: KAPLAYCtx, boss: GameObj, anim: string ) => {
-	if ( anim === 'open-fire' ) boss.enterState('fire')
-	if ( anim === 'shut-fire' ) boss.enterState('follow')
+	if ( anim === 'openFire' ) boss.enterState('fire')
+	if ( anim === 'shutFire' ) boss.enterState('follow')
 	if ( anim === 'explode' ) k.destroy(boss)
 }
 
