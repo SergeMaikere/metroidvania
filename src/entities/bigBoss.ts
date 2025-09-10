@@ -1,6 +1,7 @@
 import type { AudioPlay, GameObj, KAPLAYCtx, Vec2 } from "kaplay";
 import { state, type State } from "../state/sateManager";
-import { isPlayerInRange, kGet } from "../utils/helper";
+import { blink, curry, isPlayerInRange, kGet } from "../utils/helper";
+import { makeNotificationBox } from "../ui/notificationBox";
 
 const STATES = [ 'idle', 'follow', 'open-fire', 'fire', 'shut-fire', 'explode' ]
 
@@ -20,23 +21,28 @@ export const makeBigBoss = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 				range: 40,
 				fireDuration: 1,
 				setBehavior () { return setBehavior(k, state, this) },
-				setEvents () { return setEvents(k, this) },
+				setEvents () { return setEvents(k, state, this) },
 			}
 		]
 	)
 }
 
 const setBehavior = ( k: KAPLAYCtx, state: State, boss: any ) => {
+
 	boss.onStateUpdate( 'idle', () => state.isBossFight && boss.enterState('follow') )
 	boss.onStateEnter( 'follow', () => boss.play('run') )
 	boss.onStateUpdate( 'follow', () => stalker(k, boss) )
+	boss.onStateEnter( 'open-fire', () => boss.play('openFire') )
 	boss.onStateEnter( 'fire', () => burnPlayer(k, state, boss) )
 	boss.onStateEnd( 'fire', () => destroyFireHitbox(k) )
 	boss.onStateEnter( 'shut-fire', () => boss.play('shutFire') )
 }
 
-const setEvents = ( k: KAPLAYCtx, boss: any ) => {
-
+const setEvents = ( k: KAPLAYCtx, state: State, boss: any ) => {
+	boss.onCollide( 'sword-hitbox', () => onHitByPlayer(k, boss) )
+	boss.onAnimEnd( curry(stateFlowCloser)(k, boss) )
+	boss.on( 'explode', () =>  onExplode(k, state, boss) )
+	boss.on( 'hurt', () => onHurt(k, boss) )
 }
 
 const stalker = ( k: KAPLAYCtx, boss: GameObj ) => {
@@ -47,7 +53,7 @@ const stalker = ( k: KAPLAYCtx, boss: GameObj ) => {
 }
 
 const burnPlayer = ( k: KAPLAYCtx, state: State, boss: GameObj ) => {
-	boss.play('openFire')
+	boss.play('fire')
 	const flameThrowerSfx = k.play('flamethrower')
 	const fireHitbox = setFireHitbox(k, boss)
 	onBurningPlayer(fireHitbox, state)
@@ -87,4 +93,43 @@ const onEndingTheAttack = ( k: KAPLAYCtx, flameThrowerSfx: AudioPlay, boss: Game
 const destroyFireHitbox = ( k: KAPLAYCtx ) => {
 	const fireHitbox = kGet('fire-hitbox')
 	if ( fireHitbox ) k.destroy(fireHitbox)
+}
+
+const onHitByPlayer = ( k: KAPLAYCtx, boss: GameObj ) => {
+	k.play('boom')
+	boss.hurt(1)
+}
+
+const stateFlowCloser = ( k: KAPLAYCtx, boss: GameObj, anim: string ) => {
+	if ( anim === 'open-fire' ) boss.enterState('fire')
+	if ( anim === 'shut-fire' ) boss.enterState('follow')
+	if ( anim === 'explode' ) k.destroy(boss)
+}
+
+const onExplode = ( k: KAPLAYCtx, state: State, boss: GameObj ) => {
+	boss.enterState('explode')
+	boss.collisionIgnore = [ 'player' ]
+	boss.unuse('body')
+
+	k.play('boom')
+	boss.play('explode')
+
+	state.isBossDefeated = true
+	state.isDoubleJump = true
+	boss.enableDoubleJump()
+
+	const content = 'You unlocked a new ability!\nYou can now double jump.'
+	const notification = k.add( makeNotificationBox(k, content) )
+	k.wait( 3, () => notification.close() )
+}
+
+const onHurt = ( k: KAPLAYCtx, boss: GameObj ) => {
+	blink(k, boss)
+	boss.hp() === 0 && boss.trigger('explode')
+}
+
+export const setBoss = ( boss: GameObj ) => {
+	boss.setBehavior()
+	boss.setEvents()
+	return boss
 }

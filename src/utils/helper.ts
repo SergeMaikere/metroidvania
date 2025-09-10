@@ -1,5 +1,6 @@
-import type { GameObj, KAPLAYCtx } from "kaplay"
+import type { GameObj, KAPLAYCtx, Vec2 } from "kaplay"
 import { K } from "../kaplayctx"
+import type { Layer } from "./background"
 
 export const curry = ( fn: Function ) => {
 	const curried = ( ...args: any[] ) => {
@@ -18,6 +19,14 @@ export const fetchThis = async ( url: string ) => {
 	if( !result.ok ) { throw new Error('Could not fetch from ' + url) }
 	return await result.json() 
 }
+
+export const getEntityInitalPos = ( k: KAPLAYCtx, name: string, positions: Layer[] ) => {
+	const pos = positions.find( position => position.name === name )
+	if ( !pos ) return
+	return k.vec2(pos.x, pos.y)
+}
+
+export const addEntityToMap = ( k: KAPLAYCtx, map: GameObj, entityMaker: Function, position: Vec2 ) => map.add( entityMaker(k, position) )
 
 export const isPlayerInRange = ( player: GameObj, enemy: GameObj ) => enemy.pos.dist(player.pos) < enemy.range
 

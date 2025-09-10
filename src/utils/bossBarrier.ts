@@ -58,7 +58,6 @@ const onContactWithPlayer = async ( k: KAPLAYCtx, state: State, bossBarrier: Gam
 const onBossDefeated = ( state: State, bossBarrier: GameObj, player: GameObj ) => {
 	state.isBossFight = false
 	bossBarrier.deactivate(player.pos.x)
-	return bossBarrier
 }
 
 const onPlayerArrival = async ( k: KAPLAYCtx, player: GameObj, ) => {

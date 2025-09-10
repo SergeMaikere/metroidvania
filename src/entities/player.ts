@@ -1,14 +1,14 @@
-import type { Collision, GameObj, KAPLAYCtx, KEventController } from "kaplay";
+import type { Collision, GameObj, KAPLAYCtx, KEventController, Vec2 } from "kaplay";
 import { State, state } from "../state/sateManager";
 import type { Layer, Point } from "../utils/background";
 import { blink, curry, kGet } from "../utils/helper";
 
 type Direction = 'left' | 'right'
 
-export const makePlayer = ( k: KAPLAYCtx ) => {
+export const makePlayer = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 	return k.make(
 		[
-			k.pos(),
+			k.pos(initialPos),
 			k.sprite('player'),
 			k.anchor('center'),
 			k.area({shape: new k.Rect(k.vec2(0, 18), 12, 12)}),
@@ -35,12 +35,7 @@ export const setPlayer = ( player: GameObj ) => {
 	player.setControls()
 	player.setEvents()
 	player.enablePassthrough()
-}
-
-export const setPlayerPosition = ( player: GameObj, positions: Layer[] ) => {
-	positions.filter( position => position.name === 'player' )
-	.forEach( position => player.setPosition({x: position.x, y: position.y}) )
-	return positions
+	return player
 }
 
 const positionHandler = ( p: Point, player: any ) => {
