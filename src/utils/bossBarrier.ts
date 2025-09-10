@@ -1,7 +1,7 @@
 import type { GameObj, KAPLAYCtx } from "kaplay";
 import type { Layer } from "./background";
 import { State, state } from "../state/sateManager";
-import { curry } from "./helper";
+import { curry, setOpacity } from "./helper";
 
 export const makeBossBarrier = ( k: KAPLAYCtx, collider: Layer ) => {
 	return k.make(
@@ -23,11 +23,11 @@ export const makeBossBarrier = ( k: KAPLAYCtx, collider: Layer ) => {
 
 const activate = async ( k: KAPLAYCtx, collider: Layer, bossBarrier: any ) => {
 	await setCameraTransition(k, collider.properties![0].value)
-	await setOpacityTransition(k, bossBarrier, false)
+	await setOpacity(k, bossBarrier, 0.3, 1)
 }
 
 const deactivate = async ( k: KAPLAYCtx, playerPosX: number, bossBarrier: any ) =>{
-	setOpacityTransition(k, bossBarrier, true)
+	setOpacity(k, bossBarrier, 0, 1)
 	await setCameraTransition(k, playerPosX)
 	k.destroy(bossBarrier)
 
@@ -38,17 +38,6 @@ const eventHandler = ( k: KAPLAYCtx, state: State, bossBarrier: any ) => {
 	bossBarrier.onCollideEnd( 'player', () => onBossFightStarting(k, state, bossBarrier) )
 
 }
-
-const setOpacityTransition = async ( k: KAPLAYCtx, bossBarrier: GameObj, disappear: boolean ) => {
-	await k.tween(
-		bossBarrier.opacity,
-		disappear ? 0 : 0.3,
-		1,
-		(val: number) => bossBarrier.opacity = val,
-		k.easings.linear
-	)
-}
-
 
 const setCameraTransition = async ( k: KAPLAYCtx, newPos: number ) => {
 	await k.tween(
@@ -69,7 +58,6 @@ const onContactWithPlayer = async ( k: KAPLAYCtx, state: State, bossBarrier: Gam
 const onBossDefeated = ( state: State, bossBarrier: GameObj, player: GameObj ) => {
 	state.isBossFight = false
 	bossBarrier.deactivate(player.pos.x)
-	return bossBarrier
 }
 
 const onPlayerArrival = async ( k: KAPLAYCtx, player: GameObj, ) => {

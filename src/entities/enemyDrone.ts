@@ -1,6 +1,6 @@
 import type { GameObj, KAPLAYCtx, Vec2 } from "kaplay";
 import type { Layer, Point } from "../utils/background";
-import { asyncPiper, curry, piper } from "../utils/helper";
+import { asyncPiper, curry, isPlayerInRange, kGet, piper } from "../utils/helper";
 
 const STATES = ['patroling-right', 'patroling-left', 'alert', 'attack', 'retreat']
 
@@ -32,7 +32,7 @@ export const makeEnemyDrone = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 }
 
 const stateBehaviorHandler = ( k: KAPLAYCtx, drone: any ) => {
-	const player = k.get('player', {recursive: true}).pop()
+	const player = kGet('player')
 
 	return asyncPiper(
 
@@ -47,7 +47,7 @@ const stateBehaviorHandler = ( k: KAPLAYCtx, drone: any ) => {
 }
 
 const eventsHandler = ( k: KAPLAYCtx, initialPos: Point, drone: any ) => {
-	const player = k.get('player', {recursive: true}).pop()
+	const player = kGet('player')
 
 	return piper(
 		curry(onCollidingWithPlayer)(player),
@@ -154,7 +154,7 @@ const onLeavingScreen = ( initialPos: Vec2, drone: GameObj ) => {
 
 // Helpers
 
-const isPlayerInRange = ( player: GameObj, drone: GameObj ) => drone.pos.dist(player.pos) < drone.range
+
 
 export const setDrones = ( k: KAPLAYCtx, map: GameObj, positions: Layer[] ) => {
 	

@@ -12,7 +12,7 @@ const loadSprites = () => {
 				run: {from: 8, to: 13, loop: true},
 				jump: 51,
 				fall: 54,
-				explode: {from: 64, to: 69, loop: true},
+				explode: {from: 64, to: 69},
 				attack: {from: 24, to: 28, speed: 16}
 			}
 		}
@@ -41,9 +41,9 @@ const loadSprites = () => {
 			anims: {
 				idle: { from: 0, to: 3, loop: true },
 			    run: { from: 6, to: 8, loop: true },
-			    openfire: { from: 10, to: 14 },
+			    openFire: { from: 10, to: 14 },
 			    fire: { from: 15, to: 18, loop: true },
-			    shutfire: { from: 20, to: 23 },
+			    shutFire: { from: 20, to: 23 },
 			    explode: { from: 25, to: 29 }
 			}
 		}
