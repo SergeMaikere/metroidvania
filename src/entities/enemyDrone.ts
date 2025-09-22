@@ -130,7 +130,7 @@ const onExplode = ( k: KAPLAYCtx, drone: GameObj ) => {
 }
 
 const handleDroneExplosion = ( k: KAPLAYCtx, drone: GameObj ) => {
-	k.play('boom')
+	k.play('boom', {volume: 0.5})
 	drone.collisionIgnore = [ 'player' ]
 	drone.unuse('body')
 	drone.play('explode')

@@ -1,4 +1,4 @@
-import { type GameObj, type KAPLAYCtx } from "kaplay"
+import { type Vec2, type GameObj, type KAPLAYCtx } from "kaplay"
 import { curry, piper } from "./helper"
 import { makeBossBarrier } from "./bossBarrier"
 
@@ -100,3 +100,25 @@ const setBossBarrierCollider = ( k: KAPLAYCtx, map: GameObj, collider: Layer ) =
 	const bossBarrier =  map.add( makeBossBarrier(k, collider) )
 	bossBarrier.setEvents()
 }
+
+export const getEntityInitalPos = ( k: KAPLAYCtx, name: string, positions: Layer[] ) => {
+	const pos = positions.find( position => position.name === name )
+	if ( !pos ) return
+	return k.vec2(pos.x, pos.y)
+}
+
+export const addEntityToMap = ( k: KAPLAYCtx, map: GameObj, entityMaker: Function, position: Vec2 ) => map.add( entityMaker(k, position) )
+
+export const filterPositionsByType = ( name: string, positions: Layer[] ) => positions.filter( position => position.type === name )
+
+export const filterPositionsByName = ( name: string, positions: Layer[] ) => positions.filter( position => position.name === name )
+
+export const addEntitiesToMap = ( k: KAPLAYCtx, map: GameObj, entityMaker: Function, positions: Layer[] ) => positions.map( position => map.add(entityMaker(k, k.vec2(position.x, position.y))) ) 
+
+export const setEntity = ( entity: GameObj ) => {
+	if ( entity.hasOwnProperty('setBehavior') ) entity.setBehavior()
+	if ( entity.hasOwnProperty('setEvents') ) entity.setEvents()
+	return entity
+}
+
+export const setEntities = ( entities: GameObj[] ) => entities.map(setEntity)

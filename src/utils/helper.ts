@@ -20,28 +20,6 @@ export const fetchThis = async ( url: string ) => {
 	return await result.json() 
 }
 
-export const getEntityInitalPos = ( k: KAPLAYCtx, name: string, positions: Layer[] ) => {
-	const pos = positions.find( position => position.name === name )
-	if ( !pos ) return
-	return k.vec2(pos.x, pos.y)
-}
-
-export const addEntityToMap = ( k: KAPLAYCtx, map: GameObj, entityMaker: Function, position: Vec2 ) => map.add( entityMaker(k, position) )
-
-export const filterPositionsByType = ( name: string, positions: Layer[] ) => positions.filter( position => position.type === name )
-
-export const filterPositionsByName = ( name: string, positions: Layer[] ) => positions.filter( position => position.name === name )
-
-export const addEntitiesToMap = ( k: KAPLAYCtx, map: GameObj, entityMaker: Function, positions: Layer[] ) => positions.map( position => map.add(entityMaker(k, k.vec2(position.x, position.y))) ) 
-
-export const setEntity = ( entity: GameObj ) => {
-	if ( entity.hasOwnProperty('setBehavior') ) entity.setBehavior()
-	if ( entity.hasOwnProperty('setEvents') ) entity.setEvents()
-	return entity
-}
-
-export const setEntities = ( entities: GameObj[] ) => entities.map(setEntity)
-
 export const isPlayerInRange = ( player: GameObj, enemy: GameObj ) => enemy.pos.dist(player.pos) < enemy.range
 
 export const kGet = ( gameObj: string, recursive: boolean = true ) => K.get(gameObj, {recursive})[0]
@@ -70,3 +48,5 @@ export const voyeur = (x: any, name: string = 'VOYEUR'): any => {
 	console.groupEnd()
 	return x
 }
+
+

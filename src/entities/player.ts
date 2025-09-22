@@ -24,7 +24,7 @@ export const makePlayer = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 				setPosition ( pos: Point ) { return positionHandler(pos, this) },
 				setControls () { return setControls(k, this) },
 				disableControls () { return disableControls(this) },
-				setEvents () { return eventHandler(k, state, this) },
+				setEvents () { return setEvents(k, state, this) },
 				enablePassthrough () { return passthrough(this) },
 			}
 		]
@@ -50,14 +50,14 @@ const setControls = ( k: KAPLAYCtx, player: any  ) => {
 
 const disableControls = ( player: any ) => player.controlHandlers.forEach( (handler: KEventController) => handler.cancel() )
 
-const eventHandler = ( k: KAPLAYCtx, state: State, player: any ) => {
+const setEvents = ( k: KAPLAYCtx, state: State, player: any ) => {
 	player.onFall( () => player.play('fall') )
 	player.onFallOff( () => player.play('fall') )
 	player.onGround( () => player.play('idle') )
 	player.onHeadbutt( () => player.play('fall') )
 	player.on( 'heal', () => onHeal(state, player) )
 	player.on( 'hurt', () => onHurt(k, state, player) )
-	player.onAnimEnd( (anim: string) => anim === 'explode' && k.go('intro') )
+	player.onAnimEnd( (anim: string) => anim === 'explode' && k.destroy(player) )
 }
 
 const onHeal = ( state: State, player: GameObj ) => {
@@ -70,9 +70,9 @@ const onHurt = async ( k: KAPLAYCtx, state: State, player: GameObj ) => {
 }
 
 const playerDies = ( k: KAPLAYCtx, state: State, player: GameObj ) => {
-	k.play('boom')
-	state.playerHp = state.maxPlayerHp
+	k.play('boom', {volume: 0.5})
 	player.play('explode')
+	state.playerHp = state.maxPlayerHp
 }
 
 const passthrough = ( player: any ) => {
