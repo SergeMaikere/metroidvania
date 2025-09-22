@@ -20,14 +20,6 @@ export const fetchThis = async ( url: string ) => {
 	return await result.json() 
 }
 
-export const getEntityInitalPos = ( k: KAPLAYCtx, name: string, positions: Layer[] ) => {
-	const pos = positions.find( position => position.name === name )
-	if ( !pos ) return
-	return k.vec2(pos.x, pos.y)
-}
-
-export const addEntityToMap = ( k: KAPLAYCtx, map: GameObj, entityMaker: Function, position: Vec2 ) => map.add( entityMaker(k, position) )
-
 export const isPlayerInRange = ( player: GameObj, enemy: GameObj ) => enemy.pos.dist(player.pos) < enemy.range
 
 export const kGet = ( gameObj: string, recursive: boolean = true ) => K.get(gameObj, {recursive})[0]
@@ -48,3 +40,13 @@ export const setOpacity = async ( k: KAPLAYCtx, gameObj: GameObj, opacity: numbe
 		k.easings.linear
 	)
 }
+
+export const voyeur = (x: any, name: string = 'VOYEUR'): any => {
+	console.log('\n' + name.toUpperCase())
+	console.group()
+	console.log(x)
+	console.groupEnd()
+	return x
+}
+
+

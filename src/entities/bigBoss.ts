@@ -128,8 +128,3 @@ const onHurt = ( k: KAPLAYCtx, boss: GameObj ) => {
 	boss.hp() === 0 && boss.trigger('explode')
 }
 
-export const setBoss = ( boss: GameObj ) => {
-	boss.setBehavior()
-	boss.setEvents()
-	return boss
-}

@@ -1,5 +1,5 @@
 import type { GameObj, KAPLAYCtx, Vec2 } from "kaplay";
-import type { Layer, Point } from "../utils/background";
+import type { Point } from "../utils/background";
 import { asyncPiper, curry, isPlayerInRange, kGet, piper } from "../utils/helper";
 
 const STATES = ['patroling-right', 'patroling-left', 'alert', 'attack', 'retreat']
@@ -130,7 +130,7 @@ const onExplode = ( k: KAPLAYCtx, drone: GameObj ) => {
 }
 
 const handleDroneExplosion = ( k: KAPLAYCtx, drone: GameObj ) => {
-	k.play('boom')
+	k.play('boom', {volume: 0.5})
 	drone.collisionIgnore = [ 'player' ]
 	drone.unuse('body')
 	drone.play('explode')
@@ -149,22 +149,4 @@ const onFinalHit = ( drone: GameObj ) => {
 const onLeavingScreen = ( initialPos: Vec2, drone: GameObj ) => {
 	drone.onExitScreen( () => drone.pos = initialPos )
 	return drone
-}
-
-
-// Helpers
-
-
-
-export const setDrones = ( k: KAPLAYCtx, map: GameObj, positions: Layer[] ) => {
-	
-	for ( const position of positions ) {
-		if ( position.type === 'drone' ) {
-			const drone = map.add( makeEnemyDrone(k, k.vec2(position.x, position.y)) )
-			drone.setBehavior()
-			drone.setEvents()
-		}
-	}
-
-	return positions
 }

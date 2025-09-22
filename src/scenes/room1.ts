@@ -1,10 +1,13 @@
-import type { KAPLAYCtx } from "kaplay"
-import { setMapCollider, setBackgroundColor, setGravity, setCamera, getLayer, getMap } from "../utils/background"
+import type { GameObj, KAPLAYCtx } from "kaplay"
+import { setMapCollider, setBackgroundColor, setGravity, setCamera, getLayer, getMap, type Layer } from "../utils/background"
 import { makePlayer, setPlayer } from "../entities/player"
 import { setCameraControls, setCameraZones } from "../utils/cameras"
-import { setDrones } from "../entities/enemyDrone"
-import { addEntityToMap, curry, getEntityInitalPos, piper } from "../utils/helper"
-import { makeBigBoss, setBoss } from "../entities/bigBoss"
+import { makeEnemyDrone } from "../entities/enemyDrone"
+import { addEntitiesToMap, addEntityToMap, filterPositionsByType, getEntityInitalPos, setEntities, setEntity } from "../utils/background"
+import { makeBigBoss } from "../entities/bigBoss"
+import { makeCartridge } from "../ui/cartridge"
+import { curry, kGet, piper } from "../utils/helper"
+import { makeHealthBar } from "../ui/healthBar"
 
 export const room1 = ( k: KAPLAYCtx, roomData: any ) => {
 
@@ -17,23 +20,54 @@ export const room1 = ( k: KAPLAYCtx, roomData: any ) => {
 	setMapCollider(k, map, colliders)
 
 	const positions = getLayer(roomData.layers, 'positions')
-	
-	const player = piper(
+	piper(
+		curry(player)(k, map), 
+		curry(boss)(k, map), 
+		curry(drones)(k, map), 
+		curry(cartridges)(k, map)
+	)(positions)
+
+	const cameras = getLayer(roomData.layers, 'cameras')
+	setCameraZones(k, map, cameras)
+	setCameraControls(k, map, roomData, kGet('player'))
+
+	const healthBar = addEntityToMap(k, map, makeHealthBar, k.vec2(10, 10))
+	setEntity(healthBar)
+
+}
+
+const player = ( k: KAPLAYCtx, map: GameObj, positions: Layer[] ) => {
+	piper(
 		curry(getEntityInitalPos)(k, 'player'),
 		curry(addEntityToMap)(k, map, makePlayer),
 		setPlayer
 	)(positions)
+	return positions
+} 
 
-	const boss = piper(
+const boss = ( k: KAPLAYCtx, map: GameObj, positions: Layer[] ) => {
+	piper(
 		curry(getEntityInitalPos)(k, 'boss'),
 		curry(addEntityToMap)(k, map, makeBigBoss),
-		setBoss
+		setEntity
 	)(positions)
-	
-	setDrones(k, map, positions)
+	return positions
+} 
 
-	const cameras = getLayer(roomData.layers, 'cameras')
-	setCameraZones(k, map, cameras)
-	setCameraControls(k, map, roomData, player)
+const drones = ( k: KAPLAYCtx, map: GameObj, positions: Layer[] ) => {
+	piper(
+		curry(filterPositionsByType)('drone'),
+		curry(addEntitiesToMap)(k, map, makeEnemyDrone),
+		setEntities
+	)(positions)
+	return positions
+} 
 
-}
+const cartridges = ( k: KAPLAYCtx, map: GameObj, positions: Layer[] ) => {
+	piper(
+		curry(filterPositionsByType)('cartridge'),
+		curry(addEntitiesToMap)(k, map, makeCartridge),
+		setEntities
+	)(positions)
+	return positions
+} 
