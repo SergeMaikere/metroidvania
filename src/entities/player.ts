@@ -57,18 +57,21 @@ const setEvents = ( k: KAPLAYCtx, state: State, player: any ) => {
 	player.onFallOff( () => player.play('fall') )
 	player.onGround( () => player.play('idle') )
 	player.onHeadbutt( () => player.play('fall') )
-	player.on( 'heal', () => onHeal(state, player) )
+	player.on( 'heal', () => updateHealth(state, player) )
 	player.on( 'hurt', () => onHurt(k, state, player) )
 	player.onAnimEnd( (anim: string) => anim === 'explode' && k.destroy(player) )
 }
 
-const onHeal = ( state: State, player: GameObj ) => {
-	state.playerHp = player.hp()
-}
 
 const onHurt = async ( k: KAPLAYCtx, state: State, player: GameObj ) => {
 	await blink(k, player)
-	player.hp() > 0 ? state.playerHp = player.hp() : playerDies(k, state, player)
+	updateHealth(state, player )
+	if ( player.hp() === 0 ) playerDies(k, state, player)
+}
+
+const updateHealth = ( state: State, player: GameObj ) => {
+	state.playerHp = player.hp()
+	kGet('healthBar').trigger('update')
 }
 
 const playerDies = ( k: KAPLAYCtx, state: State, player: GameObj ) => {

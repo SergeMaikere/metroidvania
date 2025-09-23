@@ -33,6 +33,7 @@ export const room1 = ( k: KAPLAYCtx, roomData: any ) => {
 
 	const healthBar = addEntityToMap(k, map, makeHealthBar, k.vec2(10, 10))
 	setEntity(healthBar)
+	// healthBar.trigger('update')
 }
 
 
