@@ -1,6 +1,6 @@
 import type { Collision, GameObj, KAPLAYCtx, KEventController, Vec2 } from "kaplay";
 import { State, state } from "../state/sateManager";
-import type { Layer, Point } from "../utils/background";
+import type { Point } from "../utils/background";
 import { blink, curry, kGet } from "../utils/helper";
 
 type Direction = 'left' | 'right'
@@ -26,6 +26,7 @@ export const makePlayer = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 				disableControls () { return disableControls(this) },
 				setEvents () { return setEvents(k, state, this) },
 				enablePassthrough () { return passthrough(this) },
+				outOfBounds (bounds: number, destination: string, previsousSceneData: any = {exitName: null}) { return outOfBounds(k, bounds, destination, previsousSceneData, this) }
 			}
 		]
 	)
@@ -35,6 +36,7 @@ export const setPlayer = ( player: GameObj ) => {
 	player.setControls()
 	player.setEvents()
 	player.enablePassthrough()
+	player.outOfBounds(1000, 'room1')
 	return player
 }
 
@@ -158,4 +160,8 @@ const setPlayerSpeed = ( player: GameObj, direction: Direction ) => direction ==
 const randomKeyReleaseHandler = ( player: GameObj, _key: string ) => {
 	if ( isIdleAnim(player) || isJumpAnim(player) || isFallAnim(player) || isAttackAnim(player) ) return
 	player.play('idle')
+}
+
+const outOfBounds = ( k: KAPLAYCtx, bounds: number, destination: string, previsousSceneData: any, player: any ) => {
+	k.onUpdate( () => player.pos.y > bounds && k.go(destination, previsousSceneData) )
 }
