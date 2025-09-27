@@ -113,7 +113,7 @@ export const filterPositionsByType = ( name: string, positions: Layer[] ) => pos
 
 export const filterPositionsByName = ( name: string, positions: Layer[] ) => positions.filter( position => position.name === name )
 
-export const addEntitiesToMap = ( k: KAPLAYCtx, map: GameObj, entityMaker: Function, positions: Layer[] ) => positions.map( position => map.add(entityMaker(k, k.vec2(position.x, position.y))) ) 
+export const addElementsToMap = ( k: KAPLAYCtx, map: GameObj, entityMaker: Function, positions: Layer[] ) => positions.map( position => map.add(entityMaker(k, k.vec2(position.x, position.y))) ) 
 
 export const setEntity = ( entity: GameObj ) => {
 	if ( entity.hasOwnProperty('setBehavior') ) entity.setBehavior()
@@ -121,4 +121,4 @@ export const setEntity = ( entity: GameObj ) => {
 	return entity
 }
 
-export const setEntities = ( entities: GameObj[] ) => entities.map(setEntity)
+export const setElements = ( entities: GameObj[] ) => entities.map(setEntity)

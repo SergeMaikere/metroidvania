@@ -1,10 +1,9 @@
 import type { KAPLAYCtx } from "kaplay"
 import { setMapCollider, setBackgroundColor, setGravity, setCamera, getLayer, getMap } from "../utils/background"
 import { setCameraControls, setCameraZones } from "../utils/cameras"
-import { addEntityToMap, setEntity } from "../utils/background"
 import { curry, kGet, piper } from "../utils/helper"
 import { makeHealthBar } from "../ui/healthBar"
-import { boss, cartridges, drones, player } from "../utils/sprites"
+import { addEntityToMap, boss, cartridges, drones, player, setElement, setExitZones } from "../utils/layers"
 
 export const room1 = ( k: KAPLAYCtx, roomData: any, previousSceneData: any = {exitName: null} ) => {
 
@@ -28,8 +27,11 @@ export const room1 = ( k: KAPLAYCtx, roomData: any, previousSceneData: any = {ex
 	setCameraZones(k, map, cameras)
 	setCameraControls(k, map, roomData, kGet('player'))
 
+	const exits = getLayer(roomData.layers, 'exits')
+	setExitZones(k, map, 'room2', exits)
+
 	const healthBar = addEntityToMap(k, map, makeHealthBar, k.vec2(10, 10))
-	setEntity(healthBar)
+	setElement(healthBar)
 	healthBar.trigger('update')
 }
 
