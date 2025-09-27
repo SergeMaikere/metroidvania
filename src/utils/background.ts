@@ -104,7 +104,7 @@ const setBossBarrierCollider = ( k: KAPLAYCtx, map: GameObj, collider: Layer ) =
 export const getEntityInitalPos = ( k: KAPLAYCtx, name: string, positions: Layer[] ) => {
 	const pos = positions.find( position => position.name === name )
 	if ( !pos ) return
-	return k.vec2(pos.x, pos.y)
+	return k.vec2(pos.x, pos.y + (name == 'boss' ? 30 : 0))
 }
 
 export const addEntityToMap = ( k: KAPLAYCtx, map: GameObj, entityMaker: Function, position: Vec2 ) => map.add( entityMaker(k, position) )
