@@ -10,8 +10,8 @@ const loadScenes = async () => {
 	const room2Data = await fetchThis('maps/room2.json')
 
 	K.scene('intro', () => intro(K))
-	K.scene('room1', () => room1(K, room1Data))
-	K.scene('room2', () => room2(K, room2Data))
+	K.scene('room1', ( previousSceneData: any ) => room1(K, room1Data, previousSceneData))
+	K.scene('room2', ( previousSceneData: any ) => room2(K, room2Data, previousSceneData))
 	K.go('intro')
 }
 

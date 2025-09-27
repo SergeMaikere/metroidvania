@@ -1,15 +1,12 @@
-import type { GameObj, KAPLAYCtx } from "kaplay"
-import { setMapCollider, setBackgroundColor, setGravity, setCamera, getLayer, getMap, type Layer } from "../utils/background"
-import { makePlayer, setPlayer } from "../entities/player"
+import type { KAPLAYCtx } from "kaplay"
+import { setMapCollider, setBackgroundColor, setGravity, setCamera, getLayer, getMap } from "../utils/background"
 import { setCameraControls, setCameraZones } from "../utils/cameras"
-import { makeEnemyDrone } from "../entities/enemyDrone"
-import { addEntitiesToMap, addEntityToMap, filterPositionsByType, getEntityInitalPos, setEntities, setEntity } from "../utils/background"
-import { makeBigBoss } from "../entities/bigBoss"
-import { makeCartridge } from "../ui/cartridge"
+import { addEntityToMap, setEntity } from "../utils/background"
 import { curry, kGet, piper } from "../utils/helper"
 import { makeHealthBar } from "../ui/healthBar"
+import { boss, cartridges, drones, player } from "../utils/sprites"
 
-export const room1 = ( k: KAPLAYCtx, roomData: any ) => {
+export const room1 = ( k: KAPLAYCtx, roomData: any, previousSceneData: any = {exitName: null} ) => {
 
 	setBackgroundColor(k, '#a2aed5')
 	setGravity(k, 2500)
@@ -37,39 +34,3 @@ export const room1 = ( k: KAPLAYCtx, roomData: any ) => {
 }
 
 
-// Utils
-const player = ( k: KAPLAYCtx, map: GameObj, positions: Layer[] ) => {
-	piper(
-		curry(getEntityInitalPos)(k, 'player'),
-		curry(addEntityToMap)(k, map, makePlayer),
-		setPlayer
-	)(positions)
-	return positions
-} 
-
-const boss = ( k: KAPLAYCtx, map: GameObj, positions: Layer[] ) => {
-	piper(
-		curry(getEntityInitalPos)(k, 'boss'),
-		curry(addEntityToMap)(k, map, makeBigBoss),
-		setEntity
-	)(positions)
-	return positions
-} 
-
-const drones = ( k: KAPLAYCtx, map: GameObj, positions: Layer[] ) => {
-	piper(
-		curry(filterPositionsByType)('drone'),
-		curry(addEntitiesToMap)(k, map, makeEnemyDrone),
-		setEntities
-	)(positions)
-	return positions
-} 
-
-const cartridges = ( k: KAPLAYCtx, map: GameObj, positions: Layer[] ) => {
-	piper(
-		curry(filterPositionsByType)('cartridge'),
-		curry(addEntitiesToMap)(k, map, makeCartridge),
-		setEntities
-	)(positions)
-	return positions
-} 
