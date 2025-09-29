@@ -45,7 +45,7 @@ const onCollide = ( k: KAPLAYCtx, camerazone: GameObj, newPositon: number ) => {
 			k.tween(
 				k.getCamPos().y,
 				newPositon,
-				0.8,
+				0.3,
 				(val) => k.setCamPos(k.getCamPos().x, val),
 				k.easings.linear
 			)

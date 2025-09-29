@@ -1,5 +1,6 @@
-import type { KAPLAYCtx } from "kaplay";
+import type { GameObj, KAPLAYCtx } from "kaplay";
 import type { Layer } from "../utils/background";
+import { getTag, sceneTransition } from "../utils/helper";
 
 export const makeExitZone = ( k: KAPLAYCtx, destination: string, exit: Layer ) => {
 	return k.make(
@@ -14,33 +15,18 @@ export const makeExitZone = ( k: KAPLAYCtx, destination: string, exit: Layer ) =
 			k.body( {isStatic: true} ),
 			exit.name,
 			{
-				setEvent () { return setEvents(k, destination, this) }
+				setEvents () { return setEvents(k, destination, this) }
 			}
 		]
 	)
 }
 
-const setEvents = ( k: KAPLAYCtx, destination: string, exitZone: any ) => {
+const setEvents = ( k: KAPLAYCtx, destination: string, exitZone: GameObj ) => {
 	exitZone.onCollide(
 		'player',
 		async () => {
-			const background = k.add(
-				[
-					k.pos( - k.width(), 0 ),
-					k.rect( k.width(), k.height() ),
-					k.color('#20214a')
-				]
-			)
-
-			await k.tween(
-				background.pos.x,
-				0,
-				0.3,
-				( val: number ) => background.pos.x = val,
-				k.easings.linear
-			)
-
-			exitZone.name === 'final-exit'  ? k.go('final-exit') : k.go(destination, {exinName: exitZone.name})
+			await sceneTransition(k)
+			exitZone.name === 'final-exit'  ? k.go('final-exit') : k.go(destination, {exitName: getTag(exitZone)})
 		}
 	)
 }

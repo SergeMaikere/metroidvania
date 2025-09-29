@@ -7,19 +7,20 @@ import { makeCartridge } from "../ui/cartridge"
 import type { Layer } from "./background"
 import { makeExitZone } from "../ui/exit"
 
+export type PreviousSceneData = { exitName: string | null }
 
-export const player = ( k: KAPLAYCtx, map: GameObj, positions: Layer[] ) => {
+export const player = ( k: KAPLAYCtx, map: GameObj, exitName: string | null, positions: Layer[] ) => {
 	piper(
-		curry(getEntityInitalPos)(k, 'player'),
+		curry(getPlayerInitialPos)(k, exitName),
 		curry(addEntityToMap)(k, map, makePlayer),
-		setPlayer
+		curry(setPlayer)(k, exitName)
 	)(positions)
 	return positions
 } 
 
 export const boss = ( k: KAPLAYCtx, map: GameObj, positions: Layer[] ) => {
 	piper(
-		curry(getEntityInitalPos)(k, 'boss'),
+		curry(getEntityInitialPos)(k, 'boss'),
 		curry(addEntityToMap)(k, map, makeBigBoss),
 		setElement
 	)(positions)
@@ -52,9 +53,13 @@ export const setExitZones = ( k: KAPLAYCtx, map: GameObj, destination: string, e
 	return exits
 }
 
+const getPlayerInitialPos = ( k: KAPLAYCtx, exit: string | null, positions: Layer[] ) => {
+	if ( !exit ) return getEntityInitialPos(k, 'player', positions)
+	if ( exit === 'exit-1' ) return getEntityInitialPos(k, 'entrance-1', positions)
+	if ( exit === 'exit-2' ) return getEntityInitialPos(k, 'entrance-2', positions)
+}
 
-
-export const getEntityInitalPos = ( k: KAPLAYCtx, name: string, positions: Layer[] ) => {
+export const getEntityInitialPos = ( k: KAPLAYCtx, name: string, positions: Layer[] ) => {
 	const pos = positions.find( position => position.name === name )
 	if ( !pos ) return
 	return k.vec2(pos.x, pos.y + (name == 'boss' ? 30 : 0))

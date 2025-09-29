@@ -22,7 +22,11 @@ export const fetchThis = async ( url: string ) => {
 
 export const isPlayerInRange = ( player: GameObj, enemy: GameObj ) => enemy.pos.dist(player.pos) < enemy.range
 
+export const isPlayerOnScreen = ( k: KAPLAYCtx, player: GameObj ) => player.pos.x > 0 && player.pos.x < k.width()
+
 export const kGet = ( gameObj: string, recursive: boolean = true ) => K.get(gameObj, {recursive})[0]
+
+export const getTag = ( gameObj: GameObj ) => gameObj.tags.pop()
 
 export const isAnim = ( gameObj: GameObj, anim: string ) => gameObj.curAnim() === anim
 
@@ -37,6 +41,24 @@ export const setOpacity = async ( k: KAPLAYCtx, gameObj: GameObj, opacity: numbe
 		opacity,
 		span,
 		(val: number) => gameObj.opacity = val,
+		k.easings.linear
+	)
+}
+
+export const sceneTransition = async ( k: KAPLAYCtx ) => {
+	const background = k.add(
+		[
+			k.pos( - k.width(), 0 ),
+			k.rect( k.width(), k.height() ),
+			k.color('#20214a')
+		]
+	)
+
+	await k.tween(
+		background.pos.x,
+		0,
+		1,
+		( val: number ) => background.pos.x = val,
 		k.easings.linear
 	)
 }

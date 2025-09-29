@@ -3,10 +3,9 @@ import { setMapCollider, setBackgroundColor, setGravity, setCamera, getLayer, ge
 import { setCameraControls, setCameraZones } from "../utils/cameras"
 import { curry, kGet, piper } from "../utils/helper"
 import { makeHealthBar } from "../ui/healthBar"
-import { addEntityToMap, boss, cartridges, drones, player, setElement, setExitZones } from "../utils/layers"
+import { addEntityToMap, boss, cartridges, drones, player, setElement, setExitZones, type PreviousSceneData } from "../utils/layers"
 
-export const room1 = ( k: KAPLAYCtx, roomData: any, previousSceneData: any = {exitName: null} ) => {
-
+export const room1 = ( k: KAPLAYCtx, roomData: any, prevScene: PreviousSceneData = {exitName: null} ) => {
 	setBackgroundColor(k, '#a2aed5')
 	setGravity(k, 2500)
 	setCamera(k, 4, {x: 170, y: 100})
@@ -17,7 +16,7 @@ export const room1 = ( k: KAPLAYCtx, roomData: any, previousSceneData: any = {ex
 
 	const positions = getLayer(roomData.layers, 'positions')
 	piper(
-		curry(player)(k, map), 
+		curry(player)(k, map, prevScene.exitName), 
 		curry(boss)(k, map), 
 		curry(drones)(k, map), 
 		curry(cartridges)(k, map)
