@@ -1,7 +1,8 @@
 import type { Collision, GameObj, KAPLAYCtx, KEventController, Vec2 } from "kaplay";
 import { State, state } from "../state/sateManager";
 import type { Point } from "../utils/background";
-import { blink, curry, kGet } from "../utils/helper";
+import { blink, curry, isPlayerOnScreen, kGet, sceneTransition } from "../utils/helper";
+import type { PreviousSceneData } from "../utils/layers";
 
 type Direction = 'left' | 'right'
 
@@ -32,11 +33,12 @@ export const makePlayer = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 	)
 }
 
-export const setPlayer = ( player: GameObj ) => {
+export const setPlayer = ( k: KAPLAYCtx, exit: string | null, player: GameObj ) => {
 	player.setControls()
 	player.setEvents()
 	player.enablePassthrough()
-	player.outOfBounds(1000, 'room1')
+	player.outOfBounds(1200, 'room1')
+	exit && k.setCamPos(player.pos)
 	return player
 }
 
@@ -165,6 +167,11 @@ const randomKeyReleaseHandler = ( player: GameObj, _key: string ) => {
 	player.play('idle')
 }
 
-const outOfBounds = ( k: KAPLAYCtx, bounds: number, destination: string, previsousSceneData: any, player: any ) => {
-	k.onUpdate( () => player.pos.y > bounds && k.go(destination, previsousSceneData) )
+const outOfBounds = ( k: KAPLAYCtx, bounds: number, destination: string, prevScene: PreviousSceneData, player: any ) => {
+	k.onUpdate( async () => player.pos.y > bounds && isPlayerOnScreen(k, player) && await backToTheBeginning(k, destination, prevScene) )
+}
+
+const backToTheBeginning = async ( k: KAPLAYCtx, destination: string, prevScene: PreviousSceneData ) => {
+	await sceneTransition(k)
+	k.go(destination, prevScene)
 }
