@@ -1,4 +1,6 @@
 import { K } from "./kaplayctx";
+import { final } from "./scenes/final";
+import { gameover } from "./scenes/gameover";
 import { intro } from "./scenes/intro";
 import { room1 } from "./scenes/room1";
 import { room2 } from "./scenes/room2";
@@ -13,6 +15,8 @@ const loadScenes = async () => {
 	K.scene('intro', () => intro(K))
 	K.scene('room1', ( prevScene: PreviousSceneData ) => room1(K, room1Data, prevScene))
 	K.scene('room2', ( prevScene: PreviousSceneData ) => room2(K, room2Data, prevScene))
+	K.scene('final-exit', () => final(K))
+	K.scene('game-over', async () => await gameover(K))
 	K.go('intro')
 }
 

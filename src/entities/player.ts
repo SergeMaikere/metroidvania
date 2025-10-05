@@ -80,6 +80,7 @@ const playerDies = ( k: KAPLAYCtx, state: State, player: GameObj ) => {
 	k.play('boom', {volume: 0.5})
 	player.play('explode')
 	state.playerHp = state.maxPlayerHp
+	k.go('game-over')
 }
 
 const passthrough = ( player: any ) => {
