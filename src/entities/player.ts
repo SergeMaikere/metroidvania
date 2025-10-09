@@ -27,7 +27,10 @@ export const makePlayer = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 				disableControls () { return disableControls(this) },
 				setEvents () { return setEvents(k, state, this) },
 				enablePassthrough () { return passthrough(this) },
-				outOfBounds (bounds: number, destination: string, previsousSceneData: any = {exitName: null}) { return outOfBounds(k, bounds, destination, previsousSceneData, this) }
+				outOfBounds (bounds: number, destination: string, previsousSceneData: any = {exitName: null}) { 
+					return outOfBounds(k, bounds, destination, previsousSceneData, this) 
+				},
+				enableDoubleJump () { (this as unknown as GameObj).numJump = 2 }
 			}
 		]
 	)
@@ -80,6 +83,7 @@ const playerDies = ( k: KAPLAYCtx, state: State, player: GameObj ) => {
 	k.play('boom', {volume: 0.5})
 	player.play('explode')
 	state.playerHp = state.maxPlayerHp
+	state.isDoubleJump = false
 	k.go('game-over')
 }
 
@@ -96,8 +100,8 @@ const passthrough = ( player: any ) => {
 const onKeyPress = ( k: KAPLAYCtx, player: GameObj ) => {
 	return k.onKeyPress(
 		(key) => {
-			if ( key === 's' ) doJump(player)
-			if ( key === 'x' ) doAttack(k, player)
+			if ( key === 'up' ) doJump(player)
+			if ( key === 'space' ) doAttack(k, player)
 		}
 	)
 }

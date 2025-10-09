@@ -40,7 +40,7 @@ const loadSprites = () => {
 			sliceY: 6,
 			anims: {
 				idle: { from: 0, to: 3, loop: true },
-			    run: { from: 6, to: 8, loop: true },
+			    run: { from: 5, to: 8, loop: true },
 			    openFire: { from: 10, to: 14 },
 			    fire: { from: 15, to: 18, loop: true },
 			    shutFire: { from: 20, to: 23 },

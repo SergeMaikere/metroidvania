@@ -13,7 +13,7 @@ export const makeBigBoss = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 			k.area( {shape: new k.Rect(k.vec2(0, 12), 12, 12)} ),
 			k.anchor( 'center' ),
 			k.opacity(1),
-			k.health(15),
+			k.health(1),
 			k.state( 'idle', STATES ),
 			'big-boss',
 			{
@@ -41,14 +41,14 @@ const setBehavior = ( k: KAPLAYCtx, state: State, boss: any ) => {
 const setEvents = ( k: KAPLAYCtx, state: State, boss: any ) => {
 	boss.onCollide( 'sword-hitbox', () => onHitByPlayer(k, boss) )
 	boss.onAnimEnd( curry(stateFlowCloser)(k, boss) )
-	boss.on( 'explode', () =>  onExplode(k, state, boss) )
+	boss.on( 'explode', async () =>  await onExplode(k, state, boss) )
 	boss.on( 'hurt', () => onHurt(k, boss) )
 }
 
 const stalker = ( k: KAPLAYCtx, boss: GameObj ) => {
 	const player = kGet('player')
 	boss.flipX = player.pos.x <= boss.pos.x
-	boss.moveTo( k.vec2(player.pos.x, player.pos.y), boss.pursuitSpeed )
+	boss.moveTo( k.vec2(player.pos.x, boss.pos.y), boss.pursuitSpeed )
 	if ( isPlayerInRange(player, boss) ) boss.enterState('open-fire')
 }
 
@@ -106,7 +106,9 @@ const stateFlowCloser = ( k: KAPLAYCtx, boss: GameObj, anim: string ) => {
 	if ( anim === 'explode' ) k.destroy(boss)
 }
 
-const onExplode = ( k: KAPLAYCtx, state: State, boss: GameObj ) => {
+const onExplode = async ( k: KAPLAYCtx, state: State, boss: GameObj ) => {
+	const player = kGet('player')
+
 	boss.enterState('explode')
 	boss.collisionIgnore = [ 'player' ]
 	boss.unuse('body')
@@ -115,12 +117,17 @@ const onExplode = ( k: KAPLAYCtx, state: State, boss: GameObj ) => {
 	boss.play('explode')
 
 	state.isBossDefeated = true
+	state.isBossFight = false
 	state.isDoubleJump = true
-	boss.enableDoubleJump()
+	
+	player.enableDoubleJump()
 
+	k.play('notify')
 	const content = 'You unlocked a new ability!\nYou can now double jump.'
 	const notification = k.add( makeNotificationBox(k, content) )
-	k.wait( 3, () => notification.close() )
+	await k.wait( 3, () => notification.close() )
+	
+	await kGet('boss-barrier').deactivate(player.pos.x)
 }
 
 const onHurt = ( k: KAPLAYCtx, boss: GameObj ) => {
