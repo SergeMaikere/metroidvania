@@ -108,6 +108,7 @@ const stateFlowCloser = ( k: KAPLAYCtx, boss: GameObj, anim: string ) => {
 
 const onExplode = async ( k: KAPLAYCtx, state: State, boss: GameObj ) => {
 	const player = kGet('player')
+	player.disableControls()
 
 	boss.enterState('explode')
 	boss.collisionIgnore = [ 'player' ]
@@ -116,9 +117,6 @@ const onExplode = async ( k: KAPLAYCtx, state: State, boss: GameObj ) => {
 	k.play('boom')
 	boss.play('explode')
 
-	state.isBossDefeated = true
-	state.isBossFight = false
-	state.isDoubleJump = true
 	
 	player.enableDoubleJump()
 
@@ -128,6 +126,12 @@ const onExplode = async ( k: KAPLAYCtx, state: State, boss: GameObj ) => {
 	await k.wait( 3, () => notification.close() )
 	
 	await kGet('boss-barrier').deactivate(player.pos.x)
+
+	state.isBossDefeated = true
+	state.isBossFight = false
+	state.isDoubleJump = true
+	
+	player.setControls()
 }
 
 const onHurt = ( k: KAPLAYCtx, boss: GameObj ) => {

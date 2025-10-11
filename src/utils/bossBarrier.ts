@@ -22,29 +22,29 @@ export const makeBossBarrier = ( k: KAPLAYCtx, collider: Layer ) => {
 }
 
 const activate = async ( k: KAPLAYCtx, collider: Layer, bossBarrier: any ) => {
+	await setOpacity(k, bossBarrier, 0.3, 0.5)
 	await setCameraTransition(k, collider.properties![0].value)
-	await setOpacity(k, bossBarrier, 0.3, 1)
 }
 
 const deactivate = async ( k: KAPLAYCtx, playerPosX: number, bossBarrier: any ) => {
-	await setCameraTransition(k, playerPosX)
 	await setOpacity(k, bossBarrier, 0, 0.5)
+	await setCameraTransition(k, playerPosX)
 	k.destroy(bossBarrier)
-
 }
 
 const eventHandler = ( k: KAPLAYCtx, state: State, bossBarrier: any ) => {
-	bossBarrier.onCollide( 'player', (player: GameObj) => onContactWithPlayer(k, state, player) )
-	bossBarrier.onCollideEnd( 'player', () => onBossFightStarting(k, state, bossBarrier) )
+	bossBarrier.onCollide( 'player', async (player: GameObj) => await onContactWithPlayer(k, state, player) )
+	bossBarrier.onCollideEnd( 'player', async () => await onBossFightStarting(k, state, bossBarrier) )
 
 }
 
 const setCameraTransition = async ( k: KAPLAYCtx, newPos: number ) => {
+	const camPosY = k.getCamPos().y
 	await k.tween(
 		k.getCamPos().x,
 		newPos,
-		3,
-		(val: number) => k.setCamPos(val, k.getCamPos().y),
+		0.5,
+		(val: number) => k.setCamPos(val, camPosY),
 		k.easings.linear
 	)
 }
@@ -59,17 +59,17 @@ const onPlayerArrival = async ( k: KAPLAYCtx, player: GameObj, ) => {
 	player.play('idle')
 	await k.tween(
 		player.pos.x,
-		player.pos.x + 25,
-		0.2,
+		player.pos.x + 35,
+		1,
 		(val: number) => player.pos.x = val,
 		k.easings.linear
 	)
 	player.setControls()
 }
 
-const onBossFightStarting = ( k: KAPLAYCtx, state: State, bossBarrier: GameObj ) => {
+const onBossFightStarting = async ( k: KAPLAYCtx, state: State, bossBarrier: GameObj ) => {
 	if ( state.isBossFight || state.isBossDefeated ) return
-	state.isBossFight = true
-	bossBarrier.activate()
 	bossBarrier.use( k.body({isStatic: true}) )
+	state.isBossFight = true
+	await bossBarrier.activate()
 }
