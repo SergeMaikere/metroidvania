@@ -43,8 +43,8 @@ export const setMapCollider = ( k: KAPLAYCtx, map: GameObj, colliders: Layer[] )
 		(collider) => {
 			piper(
 				curry(setColliderWithPolygons)(k, map),
-				curry(setBasicCollider)(k, map),
-				curry(setBossBarrierCollider)(k, map)
+				curry(setBossBarrierCollider)(k, map),
+				curry(setBasicCollider)(k, map)
 			)(collider)
 		}
 	)
@@ -78,6 +78,7 @@ const setColliderWithPolygons = ( k: KAPLAYCtx, map: GameObj, collider: Layer ) 
 }
 
 const setBasicCollider = ( k: KAPLAYCtx, map: GameObj, collider: Layer ) => {
+	if ( collider.name === 'boss-barrier' ) return collider
 	map.add(
 		[
 			k.pos( collider.x, collider.y ),
@@ -99,5 +100,6 @@ const setBossBarrierCollider = ( k: KAPLAYCtx, map: GameObj, collider: Layer ) =
 	if ( collider.name !== 'boss-barrier' ) return collider
 	const bossBarrier =  map.add( makeBossBarrier(k, collider) )
 	bossBarrier.setEvents()
+	return collider
 }
 

@@ -107,35 +107,46 @@ const stateFlowCloser = ( k: KAPLAYCtx, boss: GameObj, anim: string ) => {
 }
 
 const onExplode = async ( k: KAPLAYCtx, state: State, boss: GameObj ) => {
-	const player = kGet('player')
-	player.disableControls()
-
-	boss.enterState('explode')
-	boss.collisionIgnore = [ 'player' ]
-	boss.unuse('body')
-
-	k.play('boom')
-	boss.play('explode')
-
+	const player = updatePlayer()	
 	
-	player.enableDoubleJump()
-
-	k.play('notify')
-	const content = 'You unlocked a new ability!\nYou can now double jump.'
-	const notification = k.add( makeNotificationBox(k, content) )
-	await k.wait( 3, () => notification.close() )
-	
+	updateBigBoss(k, boss)
+	await displayWinNotification(k)
 	await kGet('boss-barrier').deactivate(player.pos.x)
+	updateState(state)
 
-	state.isBossDefeated = true
-	state.isBossFight = false
-	state.isDoubleJump = true
-	
 	player.setControls()
 }
 
 const onHurt = ( k: KAPLAYCtx, boss: GameObj ) => {
 	blink(k, boss)
 	boss.hp() === 0 && boss.trigger('explode')
+}
+
+const updatePlayer = () => {
+	const player = kGet('player')
+	player.disableControls()
+	player.enableDoubleJump()
+	return player
+}
+
+const updateBigBoss = ( k: KAPLAYCtx, boss: GameObj ) => {
+	boss.enterState('explode')
+	boss.collisionIgnore = [ 'player' ]
+	boss.unuse('body')
+	k.play('boom')
+	boss.play('explode')
+}
+
+const displayWinNotification = async ( k: KAPLAYCtx ) => {
+	k.play('notify')
+	const content = 'You unlocked a new ability!\nYou can now double jump.'
+	const notification = k.add( makeNotificationBox(k, content) )
+	await k.wait( 3, () => notification.close() )
+}
+
+const updateState = (state: State ) => {
+	state.isBossDefeated = true
+	state.isBossFight = false
+	state.isDoubleJump = true
 }
 

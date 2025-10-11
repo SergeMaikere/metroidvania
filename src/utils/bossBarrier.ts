@@ -29,6 +29,8 @@ const activate = async ( k: KAPLAYCtx, collider: Layer, bossBarrier: any ) => {
 const deactivate = async ( k: KAPLAYCtx, playerPosX: number, bossBarrier: any ) => {
 	await setOpacity(k, bossBarrier, 0, 0.5)
 	await setCameraTransition(k, playerPosX)
+	bossBarrier.unuse('body')
+	bossBarrier.collisionIgnore = [ 'player' ]
 	k.destroy(bossBarrier)
 }
 
@@ -59,7 +61,7 @@ const onPlayerArrival = async ( k: KAPLAYCtx, player: GameObj, ) => {
 	player.play('idle')
 	await k.tween(
 		player.pos.x,
-		player.pos.x + 35,
+		player.pos.x + 25,
 		1,
 		(val: number) => player.pos.x = val,
 		k.easings.linear
