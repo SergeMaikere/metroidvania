@@ -1,4 +1,4 @@
-import { type Vec2, type GameObj, type KAPLAYCtx } from "kaplay"
+import { type GameObj, type KAPLAYCtx } from "kaplay"
 import { curry, piper } from "./helper"
 import { makeBossBarrier } from "./bossBarrier"
 

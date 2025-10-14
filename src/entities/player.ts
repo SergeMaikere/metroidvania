@@ -30,7 +30,7 @@ export const makePlayer = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 				outOfBounds (bounds: number, destination: string, previsousSceneData: any = {exitName: null}) { 
 					return outOfBounds(k, bounds, destination, previsousSceneData, this) 
 				},
-				enableDoubleJump () { (this as unknown as GameObj).numJump = 2 }
+				enableDoubleJump () { (this as unknown as GameObj).use(k.doubleJump(2)) }
 			}
 		]
 	)
@@ -124,8 +124,8 @@ const isAttackAnim = ( player: GameObj ) => player.curAnim() === 'attack'
 const isRunAnim = ( player: GameObj ) => player.curAnim() === 'run'
 
 const doJump = ( player: GameObj ) => {
-	if ( isJumpAnim(player) ) player.play('jump')
-	player.doubleJump()
+	// if ( isJumpAnim(player) ) player.play('jump')
+	player.doubleJump(400)
 }
 
 const doAttack = ( k: KAPLAYCtx, player: GameObj ) => {
