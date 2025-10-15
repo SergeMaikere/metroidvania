@@ -7,7 +7,7 @@ import { addEntityToMap, cartridges, player, setElement, setExitZones, type Prev
 
 export const room2 = ( k: KAPLAYCtx, roomData: any, prevScene: PreviousSceneData ) => {
 	setBackgroundColor(k, '#a2aed5')
-	setGravity(k, 2000)
+	setGravity(k, 1500)
 	setCamera(k, 4, {x: 170, y: 100})
 
 	const map = getMap(k, 'room2')

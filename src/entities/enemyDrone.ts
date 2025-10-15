@@ -21,7 +21,7 @@ export const makeEnemyDrone = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 			'drone',
 			{
 				speed: 100,
-				pursuitSpeed: 150,
+				pursuitSpeed: 130,
 				range: 100,
 				setBehavior () { return stateBehaviorHandler(k, this) },
 				setEvents () { return eventsHandler(k, initialPos, this) }

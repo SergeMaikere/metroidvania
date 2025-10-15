@@ -123,10 +123,7 @@ const isFallAnim = ( player: GameObj ) => player.curAnim() === 'fall'
 const isAttackAnim = ( player: GameObj ) => player.curAnim() === 'attack'
 const isRunAnim = ( player: GameObj ) => player.curAnim() === 'run'
 
-const doJump = ( player: GameObj ) => {
-	// if ( isJumpAnim(player) ) player.play('jump')
-	player.doubleJump(400)
-}
+const doJump = ( player: GameObj ) => player.doubleJump(450)
 
 const doAttack = ( k: KAPLAYCtx, player: GameObj ) => {
 	if ( isAttackAnim(player) || !player.isGrounded() ) return
