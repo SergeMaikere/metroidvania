@@ -133,7 +133,7 @@ const updateBigBoss = ( k: KAPLAYCtx, boss: GameObj ) => {
 	boss.enterState('explode')
 	boss.collisionIgnore = [ 'player' ]
 	boss.unuse('body')
-	k.play('boom')
+	k.play('boom', {volume: 0.3})
 	boss.play('explode')
 }
 

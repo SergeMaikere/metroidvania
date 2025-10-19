@@ -82,8 +82,11 @@ const updateHealth = ( state: State, player: GameObj ) => {
 const playerDies = ( k: KAPLAYCtx, state: State, player: GameObj ) => {
 	k.play('boom', {volume: 0.5})
 	player.play('explode')
+
 	state.playerHp = state.maxPlayerHp
 	state.isDoubleJump = false
+	state.isBossDefeated = false
+	
 	k.go('game-over')
 }
 

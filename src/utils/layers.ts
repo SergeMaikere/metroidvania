@@ -6,6 +6,7 @@ import { makeEnemyDrone } from "../entities/enemyDrone"
 import { makeCartridge } from "../ui/cartridge"
 import type { Layer } from "./background"
 import { makeExitZone } from "../ui/exit"
+import { state } from "../state/sateManager"
 
 export type PreviousSceneData = { exitName: string | null }
 
@@ -19,6 +20,8 @@ export const player = ( k: KAPLAYCtx, map: GameObj, exitName: string | null, pos
 } 
 
 export const boss = ( k: KAPLAYCtx, map: GameObj, positions: Layer[] ) => {
+	if ( state.isBossDefeated ) return positions
+		
 	piper(
 		curry(getEntityInitialPos)(k, 'boss'),
 		curry(addEntityToMap)(k, map, makeBigBoss),
