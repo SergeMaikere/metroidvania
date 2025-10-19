@@ -1,10 +1,10 @@
 import type { KAPLAYCtx } from "kaplay";
 
-export const makeNotificationBox = ( k: KAPLAYCtx, content: string ) => {
+export const makeNotificationBox = ( k: KAPLAYCtx, content: string, rect: {width: number, height: number} ) => {
 
 	const container = k.make(
 		[
-			k.rect( 480, 100 ),
+			k.rect( rect.width, rect.height ),
 			k.color( k.Color.fromHex('#20214a') ),
 			k.fixed(),
 			k.pos( k.center() ),

@@ -15,7 +15,8 @@ export const makePlayer = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 			k.area({shape: new k.Rect(k.vec2(0, 18), 12, 12)}),
 			k.opacity(),
 			k.body(),
-			k.doubleJump(state.isDoubleJump ? 2 : 1),
+			// k.doubleJump(state.isDoubleJump ? 2 : 1),
+			k.doubleJump(2),
 			k.health(state.playerHp),
 			'player',
 			{

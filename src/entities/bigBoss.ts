@@ -140,7 +140,7 @@ const updateBigBoss = ( k: KAPLAYCtx, boss: GameObj ) => {
 const displayWinNotification = async ( k: KAPLAYCtx ) => {
 	k.play('notify')
 	const content = 'You unlocked a new ability!\nYou can now double jump.'
-	const notification = k.add( makeNotificationBox(k, content) )
+	const notification = k.add( makeNotificationBox(k, content, {width: 500, height: 180}) )
 	await k.wait( 3, () => notification.close() )
 }
 
