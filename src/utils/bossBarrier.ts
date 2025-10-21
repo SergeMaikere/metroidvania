@@ -14,7 +14,7 @@ export const makeBossBarrier = ( k: KAPLAYCtx, collider: Layer ) => {
 			'boss-barrier',
 			{
 				async activate () { return await activate(k, collider, this) },
-				async deactivate ( playerPosX: number ) { return await deactivate(k, playerPosX, this) },
+				async deactivate () { return await deactivate(k, this) },
 				setEvents () { return eventHandler(k, state, this) }
 			}
 		]
@@ -26,9 +26,8 @@ const activate = async ( k: KAPLAYCtx, collider: Layer, bossBarrier: any ) => {
 	await setCameraTransition(k, collider.properties![0].value)
 }
 
-const deactivate = async ( k: KAPLAYCtx, playerPosX: number, bossBarrier: any ) => {
+const deactivate = async ( k: KAPLAYCtx, bossBarrier: any ) => {
 	await setOpacity(k, bossBarrier, 0, 0.5)
-	await setCameraTransition(k, playerPosX)
 	bossBarrier.unuse('body')
 	bossBarrier.collisionIgnore = [ 'player' ]
 	k.destroy(bossBarrier)

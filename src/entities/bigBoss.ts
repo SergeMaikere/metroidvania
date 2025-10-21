@@ -111,7 +111,7 @@ const onExplode = async ( k: KAPLAYCtx, state: State, boss: GameObj ) => {
 	
 	updateBigBoss(k, boss)
 	await displayWinNotification(k)
-	await kGet('boss-barrier').deactivate(player.pos.x)
+	await kGet('boss-barrier').deactivate()
 	updateState(state)
 
 	player.setControls()

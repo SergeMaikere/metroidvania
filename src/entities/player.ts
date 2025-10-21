@@ -20,7 +20,7 @@ export const makePlayer = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 			k.health(state.playerHp),
 			'player',
 			{
-				speed: 150,
+				speed: 130,
 				isAttacking: false,
 				controlHandlers: [],
 				setPosition ( pos: Point ) { return positionHandler(pos, this) },
@@ -127,7 +127,7 @@ const isFallAnim = ( player: GameObj ) => player.curAnim() === 'fall'
 const isAttackAnim = ( player: GameObj ) => player.curAnim() === 'attack'
 const isRunAnim = ( player: GameObj ) => player.curAnim() === 'run'
 
-const doJump = ( player: GameObj ) => player.doubleJump(450)
+const doJump = ( player: GameObj ) => player.doubleJump(480)
 
 const doAttack = ( k: KAPLAYCtx, player: GameObj ) => {
 	if ( isAttackAnim(player) || !player.isGrounded() ) return
