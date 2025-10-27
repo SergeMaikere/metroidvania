@@ -13,7 +13,7 @@ export const makeBigBoss = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 			k.area( {shape: new k.Rect(k.vec2(0, 12), 12, 12)} ),
 			k.anchor( 'center' ),
 			k.opacity(1),
-			k.health(1),
+			k.health(9),
 			k.state( 'idle', STATES ),
 			'big-boss',
 			{
@@ -111,7 +111,7 @@ const onExplode = async ( k: KAPLAYCtx, state: State, boss: GameObj ) => {
 	
 	updateBigBoss(k, boss)
 	await displayWinNotification(k)
-	await kGet('boss-barrier').deactivate()
+	await kGet('boss-barrier').deactivate(player)
 	updateState(state)
 
 	player.setControls()

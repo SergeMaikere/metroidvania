@@ -15,8 +15,8 @@ export const makePlayer = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 			k.area({shape: new k.Rect(k.vec2(0, 18), 12, 12)}),
 			k.opacity(),
 			k.body(),
-			// k.doubleJump(state.isDoubleJump ? 2 : 1),
-			k.doubleJump(2),
+			k.doubleJump(state.isDoubleJump ? 2 : 1),
+			// k.doubleJump(2),
 			k.health(state.playerHp),
 			'player',
 			{
@@ -95,6 +95,7 @@ const passthrough = ( player: any ) => {
 	player.onBeforePhysicsResolve(
 		(collision: Collision) => {
 			if ( collision.target.is('passthrough') && player.isJumping() ) {
+				console.log(player.isJumping())
 				collision.preventResolution()
 			}
 		}
@@ -127,7 +128,10 @@ const isFallAnim = ( player: GameObj ) => player.curAnim() === 'fall'
 const isAttackAnim = ( player: GameObj ) => player.curAnim() === 'attack'
 const isRunAnim = ( player: GameObj ) => player.curAnim() === 'run'
 
-const doJump = ( player: GameObj ) => player.doubleJump(480)
+const doJump = ( player: GameObj ) => {
+	if ( player.isJumping() ) player.play('jump')
+	player.doubleJump(480)
+}
 
 const doAttack = ( k: KAPLAYCtx, player: GameObj ) => {
 	if ( isAttackAnim(player) || !player.isGrounded() ) return

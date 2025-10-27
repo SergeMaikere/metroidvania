@@ -1,7 +1,9 @@
 import type { GameObj, KAPLAYCtx } from "kaplay";
-import type { Layer } from "./background";
+import { getMap, type Layer } from "./background";
 import { State, state } from "../state/sateManager";
-import { setOpacity } from "./helper";
+import { fetchThis, kGet, setOpacity } from "./helper";
+import { room1 } from "../scenes/room1";
+import { isPlayerTooFarRight } from "./cameras";
 
 export const makeBossBarrier = ( k: KAPLAYCtx, collider: Layer ) => {
 	return k.make(
@@ -14,7 +16,7 @@ export const makeBossBarrier = ( k: KAPLAYCtx, collider: Layer ) => {
 			'boss-barrier',
 			{
 				async activate () { return await activate(k, collider, this) },
-				async deactivate () { return await deactivate(k, this) },
+				async deactivate ( player: GameObj ) { return await deactivate(k, player, this) },
 				setEvents () { return eventHandler(k, state, this) }
 			}
 		]
@@ -26,10 +28,12 @@ const activate = async ( k: KAPLAYCtx, collider: Layer, bossBarrier: any ) => {
 	await setCameraTransition(k, collider.properties![0].value)
 }
 
-const deactivate = async ( k: KAPLAYCtx, bossBarrier: any ) => {
+const deactivate = async ( k: KAPLAYCtx, player: GameObj, bossBarrier: any ) => {
+	const room1Data = await fetchThis('maps/room1.json')
+	const map = kGet('map')
+
 	await setOpacity(k, bossBarrier, 0, 0.5)
-	bossBarrier.unuse('body')
-	bossBarrier.collisionIgnore = [ 'player' ]
+	if ( !isPlayerTooFarRight(map, player, room1Data) ) await setCameraTransition(k, player.pos.x)
 	k.destroy(bossBarrier)
 }
 

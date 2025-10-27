@@ -40,7 +40,7 @@ export const setCamera = ( k: KAPLAYCtx, scale: number, pos: Point ) => {
 }
 
 
-export const getMap = ( k: KAPLAYCtx, room: string ): GameObj => k.add( [k.sprite(room), k.pos(0, 0)] )
+export const getMap = ( k: KAPLAYCtx, room: string ): GameObj => k.add( [k.sprite(room), k.pos(0, 0), 'map'] )
 
 export const getLayer = ( layers: any[], name: string ): Layer[] => layers.find( layer => layer.name === name ).objects
 
