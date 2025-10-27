@@ -7,7 +7,7 @@ import { addEntityToMap, boss, cartridges, drones, player, setElement, setExitZo
 
 export const room1 = ( k: KAPLAYCtx, roomData: any, prevScene: PreviousSceneData = {exitName: null} ) => {
 	setBackgroundColor(k, '#a2aed5')
-	setGravity(k, 2500)
+	setGravity(k, 2000)
 	setCamera(k, 4, {x: 170, y: 100})
 
 	const map = getMap(k, 'room1')

@@ -53,8 +53,8 @@ const onCollide = ( k: KAPLAYCtx, camerazone: GameObj, newPositon: number ) => {
 	)
 }
 
-const isPlayerTooFarLeft = ( map: GameObj, player: GameObj ) => map.pos.x + 160 > player.pos.x 
-const isPlayerTooFarRight = ( map: GameObj, player: GameObj, roomData: any ) => player.pos.x > map.pos.x + roomData.width * roomData.tilewidth - 160
+export const isPlayerTooFarLeft = ( map: GameObj, player: GameObj ) => map.pos.x + 160 > player.pos.x 
+export const isPlayerTooFarRight = ( map: GameObj, player: GameObj, roomData: any ) => player.pos.x > map.pos.x + roomData.width * roomData.tilewidth - 160
 
 const setCamToMaxLeft = ( k: KAPLAYCtx, map: GameObj ) => k.setCamPos( k.vec2(map.pos.x + 160, k.getCamPos().y) )
 const setCamToMaxRight = ( k: KAPLAYCtx, map: GameObj, roomData: any ) => {

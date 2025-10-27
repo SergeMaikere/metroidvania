@@ -1,6 +1,5 @@
-import type { GameObj, KAPLAYCtx, Vec2 } from "kaplay"
+import type { GameObj, KAPLAYCtx } from "kaplay"
 import { K } from "../kaplayctx"
-import type { Layer } from "./background"
 
 export const curry = ( fn: Function ) => {
 	const curried = ( ...args: any[] ) => {

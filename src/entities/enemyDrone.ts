@@ -21,7 +21,7 @@ export const makeEnemyDrone = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 			'drone',
 			{
 				speed: 100,
-				pursuitSpeed: 150,
+				pursuitSpeed: 130,
 				range: 100,
 				setBehavior () { return stateBehaviorHandler(k, this) },
 				setEvents () { return eventsHandler(k, initialPos, this) }
@@ -130,7 +130,7 @@ const onExplode = ( k: KAPLAYCtx, drone: GameObj ) => {
 }
 
 const handleDroneExplosion = ( k: KAPLAYCtx, drone: GameObj ) => {
-	k.play('boom', {volume: 0.5})
+	k.play('boom', {volume: 0.3})
 	drone.collisionIgnore = [ 'player' ]
 	drone.unuse('body')
 	drone.play('explode')

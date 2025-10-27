@@ -19,7 +19,7 @@ export const makePlayer = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 			k.health(state.playerHp),
 			'player',
 			{
-				speed: 150,
+				speed: 130,
 				isAttacking: false,
 				controlHandlers: [],
 				setPosition ( pos: Point ) { return positionHandler(pos, this) },
@@ -27,7 +27,10 @@ export const makePlayer = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 				disableControls () { return disableControls(this) },
 				setEvents () { return setEvents(k, state, this) },
 				enablePassthrough () { return passthrough(this) },
-				outOfBounds (bounds: number, destination: string, previsousSceneData: any = {exitName: null}) { return outOfBounds(k, bounds, destination, previsousSceneData, this) }
+				outOfBounds (bounds: number, destination: string, previsousSceneData: any = {exitName: null}) { 
+					return outOfBounds(k, bounds, destination, previsousSceneData, this) 
+				},
+				enableDoubleJump () { (this as unknown as GameObj).use(k.doubleJump(2)) }
 			}
 		]
 	)
@@ -57,7 +60,7 @@ const disableControls = ( player: any ) => player.controlHandlers.forEach( (hand
 const setEvents = ( k: KAPLAYCtx, state: State, player: any ) => {
 	player.onFall( () => player.play('fall') )
 	player.onFallOff( () => player.play('fall') )
-	player.onGround( () => player.play('idle') )
+	player.onGround( () => {player.play('idle')} )
 	player.onHeadbutt( () => player.play('fall') )
 	player.on( 'heal', () => updateHealth(state, player) )
 	player.on( 'hurt', () => onHurt(k, state, player) )
@@ -79,7 +82,11 @@ const updateHealth = ( state: State, player: GameObj ) => {
 const playerDies = ( k: KAPLAYCtx, state: State, player: GameObj ) => {
 	k.play('boom', {volume: 0.5})
 	player.play('explode')
+
 	state.playerHp = state.maxPlayerHp
+	state.isDoubleJump = false
+	state.isBossDefeated = false
+	
 	k.go('game-over')
 }
 
@@ -96,8 +103,8 @@ const passthrough = ( player: any ) => {
 const onKeyPress = ( k: KAPLAYCtx, player: GameObj ) => {
 	return k.onKeyPress(
 		(key) => {
-			if ( key === 's' ) doJump(player)
-			if ( key === 'x' ) doAttack(k, player)
+			if ( key === 'up' ) doJump(player)
+			if ( key === 'space' ) doAttack(k, player)
 		}
 	)
 }
@@ -120,8 +127,8 @@ const isAttackAnim = ( player: GameObj ) => player.curAnim() === 'attack'
 const isRunAnim = ( player: GameObj ) => player.curAnim() === 'run'
 
 const doJump = ( player: GameObj ) => {
-	if ( isJumpAnim(player) ) player.play('jump')
-	player.doubleJump()
+	if ( player.isJumping() ) player.play('jump')
+	player.doubleJump(480)
 }
 
 const doAttack = ( k: KAPLAYCtx, player: GameObj ) => {
