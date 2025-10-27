@@ -16,7 +16,6 @@ export const makePlayer = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 			k.opacity(),
 			k.body(),
 			k.doubleJump(state.isDoubleJump ? 2 : 1),
-			// k.doubleJump(2),
 			k.health(state.playerHp),
 			'player',
 			{
@@ -61,7 +60,7 @@ const disableControls = ( player: any ) => player.controlHandlers.forEach( (hand
 const setEvents = ( k: KAPLAYCtx, state: State, player: any ) => {
 	player.onFall( () => player.play('fall') )
 	player.onFallOff( () => player.play('fall') )
-	player.onGround( () => player.play('idle') )
+	player.onGround( () => {player.play('idle')} )
 	player.onHeadbutt( () => player.play('fall') )
 	player.on( 'heal', () => updateHealth(state, player) )
 	player.on( 'hurt', () => onHurt(k, state, player) )
@@ -95,7 +94,6 @@ const passthrough = ( player: any ) => {
 	player.onBeforePhysicsResolve(
 		(collision: Collision) => {
 			if ( collision.target.is('passthrough') && player.isJumping() ) {
-				console.log(player.isJumping())
 				collision.preventResolution()
 			}
 		}

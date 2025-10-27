@@ -13,7 +13,7 @@ export const makeBigBoss = ( k: KAPLAYCtx, initialPos: Vec2 ) => {
 			k.area( {shape: new k.Rect(k.vec2(0, 12), 12, 12)} ),
 			k.anchor( 'center' ),
 			k.opacity(1),
-			k.health(9),
+			k.health(6),
 			k.state( 'idle', STATES ),
 			'big-boss',
 			{

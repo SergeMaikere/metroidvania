@@ -65,7 +65,7 @@ const setColliderWithPolygons = ( k: KAPLAYCtx, map: GameObj, collider: Layer ) 
 }
 
 const setBasicCollider = ( k: KAPLAYCtx, map: GameObj, collider: Layer ) => {
-	if ( collider.name === 'boss-barrier' ) return collider
+	if ( collider.name === 'boss-barrier' || collider.polygon ) return collider
 
 	const shape = new k.Rect(k.vec2(0), collider.width, collider.height)
 	map.add( makeCollider(k, collider, shape) )

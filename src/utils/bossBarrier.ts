@@ -1,8 +1,7 @@
 import type { GameObj, KAPLAYCtx } from "kaplay";
-import { getMap, type Layer } from "./background";
+import { type Layer } from "./background";
 import { State, state } from "../state/sateManager";
 import { fetchThis, kGet, setOpacity } from "./helper";
-import { room1 } from "../scenes/room1";
 import { isPlayerTooFarRight } from "./cameras";
 
 export const makeBossBarrier = ( k: KAPLAYCtx, collider: Layer ) => {
